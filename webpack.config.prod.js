@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.mjs',
+  entry: './src/index.js',
   mode: 'production',
   module: {
     rules: [
