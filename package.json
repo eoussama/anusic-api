@@ -6,7 +6,8 @@
 	"scripts": {
 		"clean": "rm -rf ./dist/",
 		"build:dev": "npx webpack --config ./webpack.config.js",
-		"build:prod": "npx webpack --config ./webpack.config.prod.js"
+		"build:prod": "npx webpack --config ./webpack.config.prod.js",
+		"build:all": "npm run build:prod && npm run build:dev"
 	},
 	"repository": {
 		"type": "git",
