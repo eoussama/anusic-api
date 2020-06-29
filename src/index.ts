@@ -27,4 +27,4 @@ export default class AnusicScrapper {
   //#endregion
 }
 
-new AnusicScrapper();
+new AnusicScrapper().getAnimeList();
