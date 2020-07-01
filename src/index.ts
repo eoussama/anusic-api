@@ -23,7 +23,13 @@ export default class AnusicScrapper {
     axios.get(`${config.endpoints.themes}/anime_index`)
       .then((response: AxiosResponse) => {
         const $ = cheerio.load(response.data);
-        writeFileSync('dump.html', $.html());
+        const categories: string[] = [];
+
+        $('.toc li').each((index, element) => {
+          categories.push($(element).text().toLowerCase());
+        });
+
+        writeFileSync('dump.json', JSON.stringify(categories));
       });
   }
 
