@@ -1,3 +1,8 @@
+
+/**
+ * Gets the category list
+ * @param $ Cherrio object
+ */
 export function getCategories($: CheerioStatic): string[] {
   const categories: string[] = [];
 
