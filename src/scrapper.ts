@@ -12,3 +12,10 @@ export function getCategories($: CheerioStatic): string[] {
 
   return categories;
 }
+
+export function getAnimeList($: CheerioStatic): any {
+  const categories = getCategories($);
+  const animeList: any = [];
+
+  return animeList;
+}
