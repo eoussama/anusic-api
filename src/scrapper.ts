@@ -13,9 +13,19 @@ export function getCategories($: CheerioStatic): string[] {
   return categories;
 }
 
+/**
+ * Gets the anime list
+ * @param $ Cherrio object
+ */
 export function getAnimeList($: CheerioStatic): any {
-  const categories = getCategories($);
+  const categories: any = getCategories($);
   const animeList: any = [];
+
+  categories.forEach((category: string) => {
+    $(`#wiki_${category} ~ p`).each((index: number, element: CheerioElement) => {
+      animeList.push($(element).text());
+    });
+  });
 
   return animeList;
 }

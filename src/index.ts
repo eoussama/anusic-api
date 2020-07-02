@@ -24,7 +24,7 @@ export default class AnusicScrapper {
     axios.get(`${config.endpoints.themes}/anime_index`)
       .then((response: AxiosResponse) => {
         const $ = cheerio.load(response.data);
-        writeFileSync('dump.json', JSON.stringify(getAnimeList($)));
+        writeFileSync('dump.json', JSON.stringify(getAnimeList($), null, 2));
       });
   }
 
