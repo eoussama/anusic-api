@@ -28,7 +28,7 @@ export function getAnimeList($: CheerioStatic): any {
 
       animeList.push({
         id: '',
-        name: text.substring(0, text.lastIndexOf('(')),
+        name: text.substring(0, text.lastIndexOf('(')).trim(),
         altName: '',
         themes: []
       });
