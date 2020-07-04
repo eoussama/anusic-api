@@ -1,4 +1,4 @@
-import { IAnime } from "./models/anime.model";
+import { IAnime, Anime } from "./models/anime.model";
 
 /**
  * Gets the category list
@@ -20,18 +20,16 @@ export function getCategories($: CheerioStatic): string[] {
  */
 export function getAnimeList($: CheerioStatic): any {
   const categories: any = getCategories($);
-  const animeList: IAnime[] = [];
+  const animeList: Anime[] = [];
 
   categories.forEach((category: string) => {
     $(`#wiki_${category} ~ p`).each((index: number, element: CheerioElement) => {
-      const text = $(element).text();
-
-      animeList.push({
+      animeList.push(new Anime({
         id: '',
-        name: text.substring(0, text.lastIndexOf('(')).trim(),
+        name: $(element).text(),
         altName: '',
         themes: []
-      });
+      }));
     });
   });
 
