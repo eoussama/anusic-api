@@ -1,9 +1,9 @@
-import { Theme } from './theme.model';
+import { ITheme } from './theme.model';
 
 /**
  * The Anime
  */
-export interface Anime {
+export interface IAnime {
 
   /**
    * The ID of the Anime
@@ -23,5 +23,5 @@ export interface Anime {
   /**
    * The themes of the Anime
    */
-  themes: Theme[];
+  themes: ITheme[];
 }

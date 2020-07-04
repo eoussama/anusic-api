@@ -3,7 +3,7 @@ import { MediaFormat } from '../enums/media-format.enum';
 /**
  * The theme
  */
-export interface Theme {
+export interface ITheme {
 
   /**
    * The name of the theme
