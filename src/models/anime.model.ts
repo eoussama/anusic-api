@@ -51,4 +51,10 @@ export class Anime implements IAnime {
   }
 
   //#endregion
+
+  //#region Methods
+
+  private fetchInfo(): void { }
+
+  //#endregion
 }
