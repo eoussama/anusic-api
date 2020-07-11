@@ -32,12 +32,19 @@ export default class AnusicScrapper {
       .then((response: AxiosResponse) => {
         const $ = cheerio.load(response.data);
         this.anime = getAnimeList($);
-        // writeFileSync('dump.json', JSON.stringify(, null, 2));
       });
   }
 
-  dump(): void {
+  /**
+   * Creates a dump file
+   */
+  createDump(): void {
+    const dump = {
+      lastUpdate: new Date().getTime(),
+      anime: [...this.anime]
+    };
 
+    writeFileSync('dump.json', JSON.stringify(dump, null, 2));
   }
 
   //#endregion
@@ -46,3 +53,4 @@ export default class AnusicScrapper {
 const client = new AnusicScrapper();
 
 client.getAnimeList();
+client.createDump();
