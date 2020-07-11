@@ -27,12 +27,17 @@ export default class AnusicScrapper {
   /**
    * Gets the Anime list
    */
-  getAnimeList(): void {
-    axios.get(`${config.endpoints.themes}/anime_index`)
-      .then((response: AxiosResponse) => {
-        const $ = cheerio.load(response.data);
-        this.anime = getAnimeList($);
-      });
+  async getAnimeList(): Promise<Anime[]> {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.endpoints.themes}/anime_index`)
+        .then((response: AxiosResponse) => {
+          const $ = cheerio.load(response.data);
+
+          this.anime = getAnimeList($);
+          resolve(this.anime);
+        })
+        .catch(err => reject(err));
+    });
   }
 
   /**
@@ -52,5 +57,7 @@ export default class AnusicScrapper {
 
 const client = new AnusicScrapper();
 
-client.getAnimeList();
-client.createDump();
+client.getAnimeList()
+  .then(() => {
+    client.createDump();
+  });
