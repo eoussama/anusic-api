@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync, existsSync } from "fs";
 import { resolve } from "path";
 
 import * as config from "./config.json";
@@ -23,6 +23,8 @@ export default class AnusicScrapper {
 
   //#endregion
 
+
+
   //#region Lifecycle
 
   /**
@@ -40,6 +42,8 @@ export default class AnusicScrapper {
   }
 
   //#endregion
+
+
 
   //#region Methods
 
@@ -79,6 +83,11 @@ export default class AnusicScrapper {
 
     // Constructing the dump file path
     const path = resolve(this.dumpLocation, 'dump.json');
+
+    // Treating the recursive sub-foldering
+    if (!(this.dumpLocation && this.dumpLocation.length > 0 && existsSync(this.dumpLocation))) {
+      mkdirSync(this.dumpLocation, { recursive: true });
+    }
 
     // Dumping the object into a file
     writeFileSync(path, JSON.stringify(dump, null, 2));

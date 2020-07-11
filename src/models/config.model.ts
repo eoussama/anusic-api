@@ -1,6 +1,6 @@
 /**
  * Anusic configuration model
  */
-export interface IAnusicConfig extends Object {
+export interface IAnusicConfig {
   dumpLocation: string;
 }
