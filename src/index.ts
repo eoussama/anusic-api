@@ -1,4 +1,10 @@
-import { writeFileSync, mkdirSync, existsSync } from "fs";
+import {
+  writeFileSync,
+  readFileSync,
+  mkdirSync,
+  existsSync
+} from "fs";
+
 import { resolve } from "path";
 
 import * as config from "./config.json";
@@ -93,10 +99,25 @@ export default class AnusicScrapper {
     writeFileSync(path, JSON.stringify(dump, null, 2));
   }
 
+  async loadDump(): Promise<void> {
+    return new Promise((res, rej) => {
+
+      // Constructing the dump file path
+      const path = resolve(this.dumpLocation, 'dump.json');
+
+      // Checking if the dump file exists
+      if (existsSync(path) && path) {
+        // res(readFileSync(path).toJSON());
+      } else {
+        rej();
+      }
+    });
+  }
+
   //#endregion
 }
 
-const client = new AnusicScrapper({ dumpLocation: 'dir1/dir2' });
+const client = new AnusicScrapper();
 
 client.getAnimeList()
   .then(() => {
