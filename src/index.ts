@@ -1,9 +1,14 @@
+import { writeFileSync } from "fs";
+import { resolve } from "path";
+
 import * as config from "./config.json";
 import * as cheerio from "cheerio";
 import axios, { AxiosResponse } from "axios";
-import { writeFileSync } from "fs";
+
+
 import { getAnimeList } from "./scrapper";
 import { Anime } from "./models/anime.model";
+import { IAnusicConfig } from "./models/config.model";
 
 /**
  * Anusic scrapper class
@@ -12,13 +17,27 @@ export default class AnusicScrapper {
 
   //#region Properties
 
+  dumpLocation: string = '';
+
   anime: Anime[] = [];
 
   //#endregion
 
   //#region Lifecycle
 
-  constructor() { }
+  /**
+   * Creates an Anusic instance
+   * @param config The configuration object
+   */
+  constructor(config?: IAnusicConfig) {
+
+    // Checking if the config object is provided
+    if (config) {
+
+      // Sanitizing the dump location property
+      this.dumpLocation = config.dumpLocation ?? '';
+    }
+  }
 
   //#endregion
 
@@ -28,15 +47,22 @@ export default class AnusicScrapper {
    * Gets the Anime list
    */
   async getAnimeList(): Promise<Anime[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((res, rej) => {
+
+      // Getting the scrapped data
       axios.get(`${config.endpoints.themes}/anime_index`)
         .then((response: AxiosResponse) => {
+
+          // Loading the scrapped data
           const $ = cheerio.load(response.data);
 
+          // Formatting the data
           this.anime = getAnimeList($);
-          resolve(this.anime);
+
+          // Resolving the promise
+          res(this.anime);
         })
-        .catch(err => reject(err));
+        .catch(err => rej(err));
     });
   }
 
@@ -44,12 +70,18 @@ export default class AnusicScrapper {
    * Creates a dump file
    */
   createDump(): void {
+
+    // Constructing the dump object
     const dump = {
       lastUpdate: new Date().getTime(),
       anime: [...this.anime]
     };
 
-    writeFileSync('dump.json', JSON.stringify(dump, null, 2));
+    // Constructing the dump file path
+    const path = resolve(this.dumpLocation, 'dump.json');
+
+    // Dumping the object into a file
+    writeFileSync(path, JSON.stringify(dump, null, 2));
   }
 
   //#endregion
