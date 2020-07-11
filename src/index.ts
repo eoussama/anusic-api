@@ -85,7 +85,7 @@ export default class AnusicScrapper {
     const path = resolve(this.dumpLocation, 'dump.json');
 
     // Treating the recursive sub-foldering
-    if (!(this.dumpLocation && this.dumpLocation.length > 0 && existsSync(this.dumpLocation))) {
+    if (!existsSync(this.dumpLocation) && this.dumpLocation) {
       mkdirSync(this.dumpLocation, { recursive: true });
     }
 
@@ -96,7 +96,7 @@ export default class AnusicScrapper {
   //#endregion
 }
 
-const client = new AnusicScrapper();
+const client = new AnusicScrapper({ dumpLocation: 'dir1/dir2' });
 
 client.getAnimeList()
   .then(() => {
