@@ -47,7 +47,7 @@ export default class AnusicScrapper {
     }
 
     // Loading the dump file
-    this.loadDump();
+    this.loadDump().catch(err => console.log({ err }));
   }
 
   //#endregion
@@ -102,7 +102,7 @@ export default class AnusicScrapper {
     writeFileSync(path, JSON.stringify(dump, null, 2));
   }
 
-  async loadDump(): Promise<void> {
+  async loadDump(): Promise<any> {
     return new Promise((res, rej) => {
 
       // Constructing the dump file path
@@ -110,9 +110,12 @@ export default class AnusicScrapper {
 
       // Checking if the dump file exists
       if (existsSync(path) && path) {
-        // res(readFileSync(path).toJSON());
-        console.log(readFileSync(path));
-        res();
+
+        // Parting the data
+        const result = JSON.parse(readFileSync(path).toString());
+        this.anime = result.anime;
+
+        res(result);
       } else {
         rej();
       }
@@ -122,5 +125,5 @@ export default class AnusicScrapper {
   //#endregion
 }
 
-const client = new AnusicScrapper();
+const client = new AnusicScrapper({ dumpLocation: 'dir1/dir2' });
 console.log({ anime: client.anime[0] });
