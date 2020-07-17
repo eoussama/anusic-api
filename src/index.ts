@@ -45,6 +45,9 @@ export default class AnusicScrapper {
       // Sanitizing the dump location property
       this.dumpLocation = config.dumpLocation ?? '';
     }
+
+    // Loading the dump file
+    this.loadDump();
   }
 
   //#endregion
@@ -108,6 +111,8 @@ export default class AnusicScrapper {
       // Checking if the dump file exists
       if (existsSync(path) && path) {
         // res(readFileSync(path).toJSON());
+        console.log(readFileSync(path));
+        res();
       } else {
         rej();
       }
@@ -118,8 +123,4 @@ export default class AnusicScrapper {
 }
 
 const client = new AnusicScrapper();
-
-client.getAnimeList()
-  .then(() => {
-    client.createDump();
-  });
+console.log({ anime: client.anime[0] });
