@@ -3,13 +3,7 @@ FROM golang:1.14.3-alpine AS build
 
 WORKDIR /src
 
-COPY . .
+COPY ./src ./
 
-RUN go build -o /out/example .
+RUN go build -o /out/anusic_api .
 
-# Run
-FROM scratch AS bin
-
-COPY --from=build /out/anusic
-
-CMD ["npm", "start"]
