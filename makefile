@@ -1,5 +1,5 @@
 run: 
-	go run ./src/main.go
+	go run ./src/*.go
 
 build:
-	go build ./src/main.go
+	cd ./src/; go build -o anusicapi
