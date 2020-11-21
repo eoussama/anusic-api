@@ -11,14 +11,19 @@ import (
 const base string = "https://www.reddit.com/r/AnimeThemes/wiki/"
 
 func main() {
+
+	// Routing
 	r := mux.NewRouter()
 	log.SetPrefix("[Anusic API] ")
 
 	r.HandleFunc("/", index).Methods("GET")
 	r.HandleFunc("/anime", animeList).Methods("GET")
 
+	// Loading cache data if available
+	loadCache()
+
+	// Starting
 	log.Println("Starting...")
-	// http.DefaultClient.Timeout = time.Minute * 10
 	http.ListenAndServe(":8000", r)
 }
 
@@ -30,8 +35,14 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 // Get anime list
 func animeList(w http.ResponseWriter, r *http.Request) {
+
 	// Scraping anime list
-	animeTitles := scrapAnimeList()
+	animeTitles := cachedAnimeList
+
+	// If no cache available scrap data
+	if len(animeTitles) == 0 {
+		animeTitles = scrapAnimeList()
+	}
 
 	// Setting up JSON headers
 	w.Header().Set("Content-Type", "application/json")
