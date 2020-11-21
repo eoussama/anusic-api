@@ -1,5 +1,5 @@
 # Environment files
-src/config/.env
+# src/config/.env
 
 # Binaries for programs and plugins
 *.exe
@@ -7,7 +7,6 @@ src/config/.env
 *.dll
 *.so
 *.dylib
-bin/
 
 # Test binary, built with `go test -c`
 *.test

@@ -5,4 +5,4 @@ build:
 	cd ./src/; go build -o ./../bin/anusicapi
 
 clean:
-	rm -rf src/anusicapi
+	rm -rf bin/

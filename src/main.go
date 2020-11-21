@@ -4,14 +4,26 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 const base string = "https://www.reddit.com/r/AnimeThemes/wiki/"
 
 func main() {
+
+	// Loading env vars
+	absPath, _ := filepath.Abs(".")
+	path := filepath.Join(absPath, "config", ".env")
+
+	err := godotenv.Load(path)
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	// Routing
 	router := mux.NewRouter()
@@ -26,7 +38,7 @@ func main() {
 	log.Println("Starting...")
 
 	corsObj := handlers.AllowedOrigins([]string{"*"})
-	http.ListenAndServe(":8000", handlers.CORS(corsObj)(router))
+	http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(corsObj)(router))
 }
 
 // Entry
