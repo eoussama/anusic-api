@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -28,7 +28,7 @@ func scrapAnimeList() []Anime {
 			year, _ := strconv.ParseInt(extract[idx+2:len(extract)-1], 10, 16)
 
 			anime := Anime{
-				Name:     extract[:idx],
+				Name:     strings.Trim(strings.Replace(extract[:idx], "\"", "", -1), " "),
 				Year:     uint16(year),
 				linkInfo: element.Attr("href"),
 			}
@@ -36,7 +36,7 @@ func scrapAnimeList() []Anime {
 			// Element ID on the DOM
 			targetID := anime.linkInfo[strings.Index(anime.linkInfo, "#")+1:]
 			scrapAnimeInfo(targetID, &anime)
-			fmt.Printf("%d - %+v\n", len(animeTitles), anime)
+			log.Printf("[%d] - %+v\n", len(animeTitles), anime)
 
 			// Appending extracted anime title
 			animeTitles = append(animeTitles, anime)
@@ -72,9 +72,14 @@ func scrapAnimeInfo(targetID string, anime *Anime) {
 
 			// Extracting the alt name
 			if element.DOM.Next().Is("p") {
-				anime.AltName = element.DOM.Next().Text()
-			}
+				altNamesStr := strings.Replace(element.DOM.Next().Text(), "\"", "", -1)
+				altNamesFrg := strings.Split(altNamesStr, ",")
+				anime.AltNames = []string{}
 
+				for i := 0; i < len(altNamesFrg); i++ {
+					anime.AltNames = append(anime.AltNames, altNamesFrg[i])
+				}
+			}
 		}
 	})
 

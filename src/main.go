@@ -23,9 +23,9 @@ func main() {
 	// Loading cache data if available
 	loadCache()
 
-	corsObj := handlers.AllowedOrigins([]string{"*"})
-
 	log.Println("Starting...")
+
+	corsObj := handlers.AllowedOrigins([]string{"*"})
 	http.ListenAndServe(":8000", handlers.CORS(corsObj)(router))
 }
 
