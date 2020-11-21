@@ -7,7 +7,7 @@ src/config/.env
 *.dll
 *.so
 *.dylib
-anusicapi
+bin/
 
 # Test binary, built with `go test -c`
 *.test
