@@ -24,6 +24,7 @@ func main() {
 	// Routing
 	router.HandleFunc("/", IndexHandler).Methods("GET")
 	router.HandleFunc("/anime", AnimeListHandler).Methods("GET")
+	router.HandleFunc("/anime/{id:[0-9]+}", AnimeHandler).Methods("GET")
 
 	// CORS
 	corsObj := handlers.AllowedOrigins([]string{"*"})
