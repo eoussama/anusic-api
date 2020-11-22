@@ -14,20 +14,20 @@ function App() {
         setAnimeList(e.data);
         setList(animeList);
       });
-  }, [])
+  }, [animeList])
 
 
   return (
     <React.Fragment>
       <nav className="navbar sticky-top navbar-light bg-light px-5">
-        <a className="navbar-brand">Anusic Test</a>
+        <a className="navbar-brand">Anusic React</a>
         <div className="form-inline">
           <input
             className="form-control mr-sm-2"
             type="search"
             placeholder="Search"
             aria-label="Search"
-            onChange={(e) => {
+            onInput={(e) => {
               if (e.target.value.length > 0) {
                 console.log(e.target.value);
                 setList(animeList.filter(anime =>
