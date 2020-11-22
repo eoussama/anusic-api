@@ -1,6 +1,11 @@
 FROM golang:1.15-alpine AS build
-WORKDIR /src
+
+WORKDIR .
+
 COPY . .
-RUN go build -o /out/example .
-FROM scratch AS bin
-COPY --from=build /out/example /
+
+RUN cd ./src/; go install
+
+EXPOSE 8000
+
+CMD ["$GOPATH/bin/anusic-api"]
