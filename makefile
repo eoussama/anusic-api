@@ -9,8 +9,5 @@ build:
 start: build
 	./bin/anusic-api
 
-start: build
-	./bin/anusicapi
-
 clean:
 	rm -rf bin/
