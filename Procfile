@@ -1,1 +1,1 @@
-web: bin/anusicapi
+web: bin/anusic-api

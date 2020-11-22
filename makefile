@@ -4,7 +4,10 @@ run:
 	go run ./src/*.go
 
 build:
-	cd ./src/; go build -o ./../bin/anusicapi
+	cd ./src/; go build -o ./../bin/anusic-api
+
+start: build
+	./bin/anusic-api
 
 start: build
 	./bin/anusicapi
