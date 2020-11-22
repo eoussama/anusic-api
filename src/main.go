@@ -9,8 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const base string = "https://www.reddit.com/r/AnimeThemes/wiki/"
-
 func main() {
 	log.SetPrefix("[Anusic API] ")
 
@@ -20,14 +18,17 @@ func main() {
 	// Loading cache data if available
 	loadCache()
 
-	// Routing
+	// Creating router
 	router := mux.NewRouter()
 
+	// Routing
 	router.HandleFunc("/", IndexHandler).Methods("GET")
 	router.HandleFunc("/anime", AnimeListHandler).Methods("GET")
 
-	log.Println("Starting...")
-
+	// CORS
 	corsObj := handlers.AllowedOrigins([]string{"*"})
+
+	// Starting
+	log.Println("Starting...")
 	http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(corsObj)(router))
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"strconv"
 	"strings"
 
@@ -45,7 +46,7 @@ func scrapAnimeList() []Anime {
 	})
 
 	// Visiting the target page and invoking the scraper
-	collector.Visit(base + "anime_index")
+	collector.Visit(os.Getenv("BASE") + "anime_index")
 	collector.Wait()
 
 	return animeTitles
