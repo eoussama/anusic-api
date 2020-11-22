@@ -1,0 +1,11 @@
+version: "3"
+services:
+  api:
+    image: eoussama/anusic-api:0.0.1
+    container_name: anusic-api
+    restart: always
+    build:
+      context: ./../
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "80:8000"
