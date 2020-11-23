@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"encoding/json"
@@ -6,11 +6,15 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/eoussama/anusic-api/src/models"
 )
 
-var cachedAnimeList []Anime = []Anime{}
+// CachedAnimeList stores the cached anime list
+var CachedAnimeList []models.Anime = []models.Anime{}
 
-func loadCache() bool {
+// LoadCache loads the cache files
+func LoadCache() bool {
 	log.Println("Loading cache...")
 
 	// Constructing the cache file
@@ -24,7 +28,7 @@ func loadCache() bool {
 	}
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &cachedAnimeList)
+	json.Unmarshal(byteValue, &CachedAnimeList)
 
 	// Clearing resources
 	defer jsonFile.Close()
