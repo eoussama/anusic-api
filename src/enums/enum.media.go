@@ -1,4 +1,4 @@
-package main
+package enums
 
 // Media format
 const (

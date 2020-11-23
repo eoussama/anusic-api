@@ -1,19 +1,21 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/eoussama/anusic-api/src/utils"
 )
 
 // AnimeListHandler handles the anime list request (/)
 func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Scraping anime list
-	animeTitles := cachedAnimeList
+	animeTitles := utils.CachedAnimeList
 
 	// If no cache available scrap data
 	if len(animeTitles) == 0 {
-		animeTitles = scrapAnimeList()
+		animeTitles = utils.ScrapAnimeList()
 	}
 
 	// Setting up JSON headers

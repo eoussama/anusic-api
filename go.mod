@@ -1,4 +1,4 @@
-module github.com/anusic-api
+module github.com/eoussama/anusic-api
 
 go 1.15
 

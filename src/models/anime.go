@@ -1,4 +1,4 @@
-package main
+package models
 
 // Anime type
 type Anime struct {
@@ -7,5 +7,5 @@ type Anime struct {
 	AltNames []string `json:"altNames"`
 	Year     uint16   `json:"year"`
 	Themes   []Theme  `json:"themes"`
-	linkInfo string
+	LinkInfo string
 }

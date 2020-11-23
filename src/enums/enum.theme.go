@@ -1,4 +1,4 @@
-package main
+package enums
 
 // Theme song types
 const (

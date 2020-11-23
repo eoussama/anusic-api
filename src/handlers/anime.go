@@ -1,9 +1,12 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/eoussama/anusic-api/src/models"
+	"github.com/eoussama/anusic-api/src/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -15,11 +18,11 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 
 	// Scraping anime list
-	anime := Anime{}
+	anime := models.Anime{}
 
 	// If no cache available scrap data
-	if len(cachedAnimeList) > 0 {
-		for _, anm := range cachedAnimeList {
+	if len(utils.CachedAnimeList) > 0 {
+		for _, anm := range utils.CachedAnimeList {
 			if anm.ID == uint16(id) {
 				anime = anm
 			}
