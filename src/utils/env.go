@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"log"
@@ -7,7 +7,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func loadEnvVars() {
+// LoadEnvVars loads the environment variables
+func LoadEnvVars() {
 	log.Println("Loading env vars...")
 
 	absPath, _ := filepath.Abs(".")

@@ -1,4 +1,4 @@
-package main
+package models
 
 // Theme song type
 type Theme struct {

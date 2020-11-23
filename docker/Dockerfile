@@ -5,28 +5,27 @@ FROM golang:1.15-alpine AS build
 ENV CGO_ENABLED=0
 
 # Defining the work directory
-WORKDIR ./src
+WORKDIR ./src/github.com/eoussama/anusic-api
 
 # Copying files
-COPY ./src .
-COPY ./go.mod .
-COPY ./data ./data
-COPY ./config ./config
+COPY . .
 
 # Building the binary
-RUN go install
+RUN go install ./src/main.go
+
+# Renaming the binary
+RUN cp /go/bin/main /go/bin/anusic-api
 
 # Getting an empty base image
 FROM scratch AS bin
 
 # Copying the binary
 COPY --from=build /go/bin/anusic-api /
-COPY --from=build /go/src/data /data
-COPY --from=build /go/src/config /config
+COPY --from=build /go/src/github.com/eoussama/anusic-api/data /data
+COPY --from=build /go/src/github.com/eoussama/anusic-api/config /config
 
 # Exposing the port
 EXPOSE 8000
 
 # Running the API
-# CMD ["/go/bin/anusic-api"]
 CMD ["/anusic-api"]
