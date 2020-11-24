@@ -11,7 +11,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    Axios.get('https://anusic-api.herokuapp.com/anime')
+    Axios.get('https://anusic-api.herokuapp.com/api/v1/anime')
       .then(e => {
         this.setState({ animeList: e.data, list: e.data });
       });
