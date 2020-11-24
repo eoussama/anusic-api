@@ -21,14 +21,16 @@ func main() {
 	// Loading cache data if available
 	utils.LoadCache()
 
-	// Creating router
+	// Creating routers
 	router := mux.NewRouter()
+	apiRouter := router.PathPrefix("/api/").Subrouter()
 
 	// Routing
 	router.HandleFunc("/", hdlr.IndexHandler).Methods("GET")
-	router.HandleFunc("/anime", hdlr.AnimeListHandler).Methods("GET")
-	router.HandleFunc("/anime/", hdlr.AnimeListHandler).Methods("GET")
-	router.HandleFunc("/anime/{id:[0-9]+}", hdlr.AnimeHandler).Methods("GET")
+
+	apiRouter.HandleFunc("/anime", hdlr.AnimeListHandler).Methods("GET")
+	apiRouter.HandleFunc("/anime/", hdlr.AnimeListHandler).Methods("GET")
+	apiRouter.HandleFunc("/anime/{id:[0-9]+}", hdlr.AnimeHandler).Methods("GET")
 
 	// CORS
 	corsObj := handlers.AllowedOrigins([]string{"*"})
