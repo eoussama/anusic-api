@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// AnimeHandler handles the anime request (/anime/{id:[0-9]+})
+// AnimeHandler handles the anime request (/api/v1/anime/{id:[0-9]+})
 func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
@@ -28,9 +28,6 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-
-	// Setting up JSON headers
-	// w.Header().Set("Content-Type", "application/json")
 
 	// Encoding the return value
 	json.NewEncoder(w).Encode(anime)

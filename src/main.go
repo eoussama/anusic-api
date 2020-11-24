@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	hdlr "github.com/eoussama/anusic-api/src/handlers"
-	"github.com/eoussama/anusic-api/src/utils"
+	hdlr "github.com/eoussama/anusic-api/src/shared/handlers"
+	"github.com/eoussama/anusic-api/src/shared/middlewares"
+	v1 "github.com/eoussama/anusic-api/src/v1"
+	"github.com/eoussama/anusic-api/src/v1/utils"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -25,12 +27,11 @@ func main() {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api/").Subrouter()
 
-	// Routing
+	router.Use(middlewares.ContentType)
 	router.HandleFunc("/", hdlr.IndexHandler).Methods("GET")
 
-	apiRouter.HandleFunc("/anime", hdlr.AnimeListHandler).Methods("GET")
-	apiRouter.HandleFunc("/anime/", hdlr.AnimeListHandler).Methods("GET")
-	apiRouter.HandleFunc("/anime/{id:[0-9]+}", hdlr.AnimeHandler).Methods("GET")
+	// Initializing the v1 API
+	v1.Init(apiRouter)
 
 	// CORS
 	corsObj := handlers.AllowedOrigins([]string{"*"})
