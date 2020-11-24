@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"log"
@@ -6,10 +6,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/eoussama/anusic-api/src/v1/models"
 	"github.com/gocolly/colly"
 )
 
-func scrapAnimeList() []Anime {
+// ScrapAnimeList scraps the entire anime list
+func ScrapAnimeList() []models.Anime {
 
 	// Initializing the scraper
 	collector := colly.NewCollector(
@@ -17,7 +19,7 @@ func scrapAnimeList() []Anime {
 	)
 
 	// Initializing the anime list
-	animeTitles := []Anime{}
+	animeTitles := []models.Anime{}
 
 	// Scraping the catalog
 	collector.OnHTML("#wiki_0-9 ~ p", func(e *colly.HTMLElement) {
@@ -28,14 +30,14 @@ func scrapAnimeList() []Anime {
 			idx := strings.LastIndex(extract, " (")
 			year, _ := strconv.ParseInt(extract[idx+2:len(extract)-1], 10, 16)
 
-			anime := Anime{
+			anime := models.Anime{
 				Name:     strings.Trim(strings.Replace(extract[:idx], "\"", "", -1), " "),
 				Year:     uint16(year),
-				linkInfo: element.Attr("href"),
+				LinkInfo: element.Attr("href"),
 			}
 
 			// Element ID on the DOM
-			targetID := anime.linkInfo[strings.Index(anime.linkInfo, "#")+1:]
+			targetID := anime.LinkInfo[strings.Index(anime.LinkInfo, "#")+1:]
 			scrapAnimeInfo(targetID, &anime)
 			log.Printf("[%d] - %+v\n", len(animeTitles), anime)
 
@@ -52,7 +54,7 @@ func scrapAnimeList() []Anime {
 	return animeTitles
 }
 
-func scrapAnimeInfo(targetID string, anime *Anime) {
+func scrapAnimeInfo(targetID string, anime *models.Anime) {
 
 	collector := colly.NewCollector(
 		colly.Async(true),
@@ -84,6 +86,6 @@ func scrapAnimeInfo(targetID string, anime *Anime) {
 		}
 	})
 
-	collector.Visit("https://www.reddit.com" + anime.linkInfo)
+	collector.Visit("https://www.reddit.com" + anime.LinkInfo)
 	collector.Wait()
 }

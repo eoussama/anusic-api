@@ -1,12 +1,13 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/eoussama/anusic-api/config"
 )
 
 // IndexHandler handles the entry request (/)
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("Anusic API")
+	json.NewEncoder(w).Encode(config.Info)
 }
