@@ -4,13 +4,16 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/eoussama/anusic-api/src/v1/models"
 	"github.com/eoussama/anusic-api/src/v1/utils"
+	"github.com/ulule/deepcopier"
 )
 
 // AnimeListHandler handles the anime list request (/api/v1/anime/)
 func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Scraping anime list
+	animeTitlesEx := []models.AnimeEx{}
 	animeTitles := utils.CachedAnimeList
 
 	// If no cache available scrap data
@@ -18,6 +21,14 @@ func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 		animeTitles = utils.ScrapAnimeList()
 	}
 
+	// Sanitizing the export struct
+	for _, anm := range animeTitles {
+		animeEx := models.AnimeEx{}
+
+		deepcopier.Copy(&animeEx).From(anm)
+		animeTitlesEx = append(animeTitlesEx, animeEx)
+	}
+
 	// Encoding the return value
-	json.NewEncoder(w).Encode(animeTitles)
+	json.NewEncoder(w).Encode(animeTitlesEx)
 }

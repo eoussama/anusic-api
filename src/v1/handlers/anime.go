@@ -7,6 +7,7 @@ import (
 
 	"github.com/eoussama/anusic-api/src/v1/models"
 	"github.com/eoussama/anusic-api/src/v1/utils"
+	"github.com/ulule/deepcopier"
 
 	"github.com/gorilla/mux"
 )
@@ -19,6 +20,7 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Scraping anime list
 	anime := models.Anime{}
+	animeEx := models.AnimeEx{}
 
 	// If no cache available scrap data
 	if len(utils.CachedAnimeList) > 0 {
@@ -29,6 +31,9 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Sanitizing the export struct
+	deepcopier.Copy(&animeEx).From(anime)
+
 	// Encoding the return value
-	json.NewEncoder(w).Encode(anime)
+	json.NewEncoder(w).Encode(animeEx)
 }
