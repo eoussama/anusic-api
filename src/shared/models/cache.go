@@ -2,7 +2,8 @@ package models
 
 // Cache type used to store cached anime titles
 type Cache struct {
-	Anime []Anime
+	Anime  []Anime
+	Themes []Theme
 }
 
 // GetAnime gets an Anime by ID

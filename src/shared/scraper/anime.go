@@ -5,14 +5,20 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/eoussama/anusic-api/src/shared/models"
+	"github.com/eoussama/anusic-api/src/shared/utils"
 	"github.com/gocolly/colly"
 )
 
+var wg sync.WaitGroup
+
 // AnimeList scraps the entire anime list
-func AnimeList() []models.Anime {
+func AnimeList() {
 	log.Println("Scraping Anime list...")
+
+	wg.Add(2)
 
 	// Initializing the scraper
 	collector := colly.NewCollector(
@@ -41,8 +47,7 @@ func AnimeList() []models.Anime {
 
 			// Element ID on the DOM
 			if len(animeTitles) < 2 {
-				AnimeInfo(targetID, &anime)
-				log.Printf("[%d] - %+v\n", len(animeTitles), anime)
+				go AnimeInfo(&anime)
 			}
 
 			// Appending extracted anime title
@@ -53,20 +58,22 @@ func AnimeList() []models.Anime {
 
 	// Visiting the target page and invoking the scraper
 	collector.Visit(os.Getenv("BASE") + "anime_index")
-	collector.Wait()
 
-	return animeTitles
+	collector.Wait()
+	wg.Wait()
+
+	utils.Cache.Anime = animeTitles
 }
 
 // AnimeInfo scraps Anime info
-func AnimeInfo(targetID string, anime *models.Anime) {
+func AnimeInfo(anime *models.Anime) {
 
 	collector := colly.NewCollector(
 		colly.Async(true),
 	)
 
 	collector.OnHTML("h3", func(element *colly.HTMLElement) {
-		if element.Attr("id") == targetID {
+		if element.Attr("id") == anime.ID {
 
 			// Extracting the ID
 			mal := element.ChildAttr("a", "href")
@@ -88,9 +95,13 @@ func AnimeInfo(targetID string, anime *models.Anime) {
 					anime.AltNames = append(anime.AltNames, altNamesFrg[i])
 				}
 			}
+
+			log.Printf("[%d] - %+v\n", 0, anime)
 		}
 	})
 
 	collector.Visit(anime.GetLink())
 	collector.Wait()
+
+	defer wg.Done()
 }
