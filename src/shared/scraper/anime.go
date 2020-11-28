@@ -1,36 +1,31 @@
 package scraper
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"strings"
-	"sync"
+	"time"
 
 	"github.com/eoussama/anusic-api/src/shared/models"
 	"github.com/eoussama/anusic-api/src/shared/utils"
 	"github.com/gocolly/colly"
 )
 
-var wg sync.WaitGroup
-
 // AnimeList scraps the entire anime list
 func AnimeList() {
 	log.Println("Scraping Anime list...")
 
-	wg.Add(2)
-
 	// Initializing the scraper
-	collector := colly.NewCollector(
-		colly.Async(true),
-	)
+	collector := colly.NewCollector(colly.Async(true))
 
 	// Initializing the anime list
 	animeTitles := []models.Anime{}
 
 	// Scraping the catalog
 	collector.OnHTML("#wiki_0-9 ~ p", func(e *colly.HTMLElement) {
-		e.ForEachWithBreak("a", func(index int, element *colly.HTMLElement) bool {
+		e.ForEachWithBreak("a", func(_ int, element *colly.HTMLElement) bool {
 
 			// Extracting anime title
 			extract := element.Text
@@ -45,63 +40,76 @@ func AnimeList() {
 				Year: uint16(year),
 			}
 
-			// Element ID on the DOM
-			if len(animeTitles) < 2 {
-				go AnimeInfo(&anime)
-			}
-
 			// Appending extracted anime title
 			animeTitles = append(animeTitles, anime)
-			return true
+			return false
 		})
 	})
 
 	// Visiting the target page and invoking the scraper
 	collector.Visit(os.Getenv("BASE") + "anime_index")
-
 	collector.Wait()
-	wg.Wait()
 
 	utils.Cache.Anime = animeTitles
 }
 
 // AnimeInfo scraps Anime info
-func AnimeInfo(anime *models.Anime) {
+func AnimeInfo() {
+	log.Println("Scraping Anime Info...")
+	start := time.Now()
 
-	collector := colly.NewCollector(
-		colly.Async(true),
-	)
+	collector := colly.NewCollector(colly.Async(true))
 
-	collector.OnHTML("h3", func(element *colly.HTMLElement) {
-		if element.Attr("id") == anime.ID {
-
-			// Extracting the ID
-			mal := element.ChildAttr("a", "href")
-			idx := strings.LastIndex(mal, "/anime/")
-			extr := mal[idx+len("/anime/") : len(mal)-1]
-			id, err := strconv.ParseInt(extr, 10, 32)
-
-			if err == nil {
-				anime.MALID = uint16(id)
-			}
-
-			// Extracting the alt name
-			if element.DOM.Next().Is("p") {
-				altNamesStr := strings.Replace(element.DOM.Next().Text(), "\"", "", -1)
-				altNamesFrg := strings.Split(altNamesStr, ",")
-				anime.AltNames = []string{}
-
-				for i := 0; i < len(altNamesFrg); i++ {
-					anime.AltNames = append(anime.AltNames, altNamesFrg[i])
-				}
-			}
-
-			log.Printf("[%d] - %+v\n", 0, anime)
-		}
+	collector.Limit(&colly.LimitRule{
+		DomainGlob:  "*",
+		Parallelism: 10,
 	})
 
-	collector.Visit(anime.GetLink())
-	collector.Wait()
+	collector.OnHTML(".md.wiki", func(e *colly.HTMLElement) {
 
-	defer wg.Done()
+		// Getting the current Anime
+		url := e.Request.URL.String()
+		index, _ := strconv.Atoi(url[strings.LastIndex(url, "?index=")+7:])
+		anime := &utils.Cache.Anime[index]
+
+		e.ForEachWithBreak("h3", func(_ int, element *colly.HTMLElement) bool {
+			if element.Attr("id") == anime.ID {
+
+				// Extracting the ID
+				mal := element.ChildAttr("a", "href")
+				idx := strings.LastIndex(mal, "/anime/")
+				extr := mal[idx+len("/anime/") : len(mal)-1]
+				id, err := strconv.ParseInt(extr, 10, 32)
+
+				if err == nil {
+					anime.MALID = uint16(id)
+				}
+
+				// Extracting the alt name
+				if element.DOM.Next().Is("p") {
+					altNamesStr := strings.Replace(element.DOM.Next().Text(), "\"", "", -1)
+					altNamesFrg := strings.Split(altNamesStr, ",")
+					anime.AltNames = []string{}
+
+					for i := 0; i < len(altNamesFrg); i++ {
+						anime.AltNames = append(anime.AltNames, altNamesFrg[i])
+					}
+				}
+
+				log.Printf("[%d] - %+v\n", index, anime)
+				return false
+			}
+
+			return true
+		})
+	})
+
+	for index, anime := range utils.Cache.Anime[:50] {
+		if index < 100 {
+			collector.Visit(anime.GetLink() + "?index=" + strconv.Itoa(index))
+		}
+	}
+
+	// collector.Wait()
+	fmt.Println("Elapsed time: ", time.Since(start))
 }
