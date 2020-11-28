@@ -17,7 +17,7 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 
 	// Getting the respective anime
-	anime := utils.Cache.GetAnime(id)
+	anime := utils.Cache.GetAnimeByMALID(id)
 
 	// Encoding the return value
 	if anime != nil {

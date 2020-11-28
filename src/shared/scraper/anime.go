@@ -31,11 +31,9 @@ func AnimeList() {
 			extract := element.Text
 			idx := strings.LastIndex(extract, " (")
 			year, _ := strconv.ParseInt(extract[idx+2:len(extract)-1], 10, 16)
-			href := element.Attr("href")
-			targetID := href[strings.Index(href, "#")+1:]
 
 			anime := models.Anime{
-				ID:   targetID,
+				ID:   strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " "),
 				Name: strings.Trim(strings.Replace(extract[:idx], "\"", "", -1), " "),
 				Year: uint16(year),
 			}
@@ -58,58 +56,58 @@ func AnimeInfo() {
 	log.Println("Scraping Anime Info...")
 	start := time.Now()
 
-	collector := colly.NewCollector(colly.Async(true))
+	collector := colly.NewCollector(colly.Async(false))
 
-	collector.Limit(&colly.LimitRule{
-		DomainGlob:  "*",
-		Parallelism: 10,
-	})
+	// collector.Limit(&colly.LimitRule{
+	// 	DomainGlob:  "*",
+	// 	Parallelism: 10,
+	// })
 
-	collector.OnHTML(".md.wiki", func(e *colly.HTMLElement) {
+	collector.OnHTML(".md.wiki > h3", func(e *colly.HTMLElement) {
 
-		// Getting the current Anime
-		url := e.Request.URL.String()
-		index, _ := strconv.Atoi(url[strings.LastIndex(url, "?index=")+7:])
-		anime := &utils.Cache.Anime[index]
+		// Getting the respective anime
+		targetID := strings.Trim(strings.Replace(e.Text, " ", "", -1), " ")
+		index, _ := utils.Cache.GetAnimeByID(targetID)
 
-		e.ForEachWithBreak("h3", func(_ int, element *colly.HTMLElement) bool {
-			if element.Attr("id") == anime.ID {
+		if index > -1 {
+			anime := &utils.Cache.Anime[index]
 
-				// Extracting the ID
-				mal := element.ChildAttr("a", "href")
-				idx := strings.LastIndex(mal, "/anime/")
-				extr := mal[idx+len("/anime/") : len(mal)-1]
-				id, err := strconv.ParseInt(extr, 10, 32)
+			// Extracting the ID
+			mal := e.ChildAttr("a", "href")
+			idx := strings.LastIndex(mal, "/anime/")
+			extr := mal[idx+len("/anime/") : len(mal)-1]
+			id, err := strconv.ParseInt(extr, 10, 32)
 
-				if err == nil {
-					anime.MALID = uint16(id)
-				}
-
-				// Extracting the alt name
-				if element.DOM.Next().Is("p") {
-					altNamesStr := strings.Replace(element.DOM.Next().Text(), "\"", "", -1)
-					altNamesFrg := strings.Split(altNamesStr, ",")
-					anime.AltNames = []string{}
-
-					for i := 0; i < len(altNamesFrg); i++ {
-						anime.AltNames = append(anime.AltNames, altNamesFrg[i])
-					}
-				}
-
-				log.Printf("[%d] - %+v\n", index, anime)
-				return false
+			if err == nil {
+				anime.MALID = uint16(id)
 			}
 
-			return true
-		})
+			// Extracting the alt name
+			if e.DOM.Next().Is("p") {
+				altNamesStr := strings.Replace(e.DOM.Next().Text(), "\"", "", -1)
+				altNamesFrg := strings.Split(altNamesStr, ",")
+				anime.AltNames = []string{}
+
+				for i := 0; i < len(altNamesFrg); i++ {
+					anime.AltNames = append(anime.AltNames, altNamesFrg[i])
+				}
+			}
+
+			log.Printf("%+v\n", anime)
+		} else {
+			println(index, targetID)
+		}
+
 	})
 
-	for index, anime := range utils.Cache.Anime[:50] {
-		if index < 100 {
-			collector.Visit(anime.GetLink() + "?index=" + strconv.Itoa(index))
-		}
+	years := []string{"2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "90s", "80s", "70s", "60s"}
+
+	for _, year := range years {
+		url := os.Getenv("BASE") + year
+		println(year)
+		collector.Visit(url)
 	}
 
-	// collector.Wait()
+	collector.Wait()
 	fmt.Println("Elapsed time: ", time.Since(start))
 }
