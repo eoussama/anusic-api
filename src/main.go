@@ -23,7 +23,9 @@ func main() {
 
 	// Loading cache data if available
 	if !utils.LoadCache() {
-		scraper.AnimeList()
+
+		// Scraping if no data cached
+		scraper.Scrap()
 	}
 
 	// Creating routers
