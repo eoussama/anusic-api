@@ -18,7 +18,7 @@ func AnimeList() {
 	start := time.Now()
 
 	// Initializing the scraper
-	collector := colly.NewCollector(colly.Async(true))
+	collector := colly.NewCollector(colly.Async(false))
 
 	// Initializing the anime list
 	animeTitles := []models.Anime{}
@@ -33,7 +33,7 @@ func AnimeList() {
 			year, _ := strconv.ParseInt(extract[idx+2:len(extract)-1], 10, 16)
 
 			anime := models.Anime{
-				ID:   strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " "),
+				ID:   strings.ToLower(strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " ")),
 				Name: strings.Trim(strings.Replace(extract[:idx], "\"", "", -1), " "),
 				Year: uint16(year),
 			}
@@ -48,8 +48,8 @@ func AnimeList() {
 	collector.Visit(os.Getenv("BASE") + "anime_index")
 	collector.Wait()
 
-	log.Printf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start))
 	utils.Cache.Anime = animeTitles
+	log.Printf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start))
 }
 
 // AnimeInfo scraps Anime info
@@ -70,10 +70,11 @@ func AnimeInfo() {
 	collector.OnHTML(".md.wiki > h3", func(e *colly.HTMLElement) {
 
 		// Getting the Anime index
-		targetID := strings.Trim(strings.Replace(e.Text, " ", "", -1), " ")
+		targetID := strings.ToLower(strings.Trim(strings.Replace(e.Text, " ", "", -1), " "))
 		index, _ := utils.Cache.GetAnimeByID(targetID)
 
 		if index > -1 {
+
 			// Getting the respective Anime
 			anime := &utils.Cache.Anime[index]
 
