@@ -10,4 +10,4 @@ start: build
 	./bin/anusic-api
 
 clean:
-	rm -rf bin/
+	rm -rf bin/ && rm -rf data

@@ -1,6 +1,9 @@
 # Getting a base golang image
 FROM golang:1.15-alpine AS build
 
+# Add Certificate
+RUN apk --no-cache add ca-certificates
+
 # Disable CGO
 ENV CGO_ENABLED=0
 
@@ -21,8 +24,10 @@ FROM scratch AS bin
 
 # Copying the binary
 COPY --from=build /go/bin/anusic-api /
-COPY --from=build /go/src/github.com/eoussama/anusic-api/data /data
+
+# Copying the deps
 COPY --from=build /go/src/github.com/eoussama/anusic-api/config /config
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Exposing the port
 EXPOSE 8000
