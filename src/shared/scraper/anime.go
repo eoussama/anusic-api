@@ -109,9 +109,8 @@ func AnimeInfo() {
 		}
 	})
 
-	years := []string{"2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "90s", "80s", "70s", "60s"}
+	for _, year := range genYears() {
 
-	for _, year := range years {
 		// Constructing the year index page
 		url := os.Getenv("BASE") + year
 
