@@ -26,6 +26,9 @@ func main() {
 
 		// Scraping if no data cached
 		scraper.Scrap()
+
+		// Saving the data
+		utils.SaveCache(utils.Cache)
 	}
 
 	// Creating routers

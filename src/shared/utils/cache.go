@@ -19,7 +19,7 @@ func LoadCache() bool {
 
 	// Constructing the cache file
 	absPath, _ := filepath.Abs(".")
-	path := filepath.Join(absPath, "data", "cachee.json")
+	path := filepath.Join(absPath, "data", "cache.json")
 	jsonFile, err := os.Open(path)
 
 	// No cache found
@@ -33,4 +33,18 @@ func LoadCache() bool {
 	// Clearing resources
 	defer jsonFile.Close()
 	return true
+}
+
+// SaveCache saves the data
+func SaveCache(cache models.Cache) {
+
+	// Constructing the cache file
+	absPath, _ := filepath.Abs(".")
+	path := filepath.Join(absPath, "data", "cache.json")
+
+	// Marshalling the data
+	file, _ := json.MarshalIndent(cache, "", " ")
+
+	// Writing to the export file
+	_ = ioutil.WriteFile(path, file, 0644)
 }

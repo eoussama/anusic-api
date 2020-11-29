@@ -61,13 +61,17 @@ func AnimeInfo() {
 
 	start := time.Now()
 	count := 0
+	async := false
 
 	// Initializing the scraper
-	collector := colly.NewCollector(colly.Async(true))
-	collector.Limit(&colly.LimitRule{
-		DomainGlob:  "*",
-		Parallelism: len(utils.Cache.Anime),
-	})
+	collector := colly.NewCollector(colly.Async(async))
+
+	if async {
+		collector.Limit(&colly.LimitRule{
+			DomainGlob:  "*",
+			Parallelism: len(utils.Cache.Anime),
+		})
+	}
 
 	// Scraping the Anime info
 	collector.OnHTML(".md.wiki > h3", func(e *colly.HTMLElement) {
