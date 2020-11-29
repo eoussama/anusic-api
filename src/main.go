@@ -7,8 +7,9 @@ import (
 
 	hdlr "github.com/eoussama/anusic-api/src/shared/handlers"
 	"github.com/eoussama/anusic-api/src/shared/middlewares"
+	"github.com/eoussama/anusic-api/src/shared/scraper"
+	"github.com/eoussama/anusic-api/src/shared/utils"
 	v1 "github.com/eoussama/anusic-api/src/v1"
-	"github.com/eoussama/anusic-api/src/v1/utils"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -21,7 +22,14 @@ func main() {
 	utils.LoadEnvVars()
 
 	// Loading cache data if available
-	utils.LoadCache()
+	if !utils.LoadCache() {
+
+		// Scraping if no data cached
+		scraper.Scrap()
+
+		// Saving the data
+		utils.SaveCache(utils.Cache)
+	}
 
 	// Creating routers
 	router := mux.NewRouter()

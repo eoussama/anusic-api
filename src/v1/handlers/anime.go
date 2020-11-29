@@ -5,9 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eoussama/anusic-api/src/v1/models"
-	"github.com/eoussama/anusic-api/src/v1/utils"
-	"github.com/ulule/deepcopier"
+	"github.com/eoussama/anusic-api/src/shared/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -18,22 +16,13 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 
-	// Scraping anime list
-	anime := models.Anime{}
-	animeEx := models.AnimeEx{}
-
-	// If no cache available scrap data
-	if len(utils.CachedAnimeList) > 0 {
-		for _, anm := range utils.CachedAnimeList {
-			if anm.ID == uint16(id) {
-				anime = anm
-			}
-		}
-	}
-
-	// Sanitizing the export struct
-	deepcopier.Copy(&animeEx).From(anime)
+	// Getting the respective anime
+	anime := utils.Cache.GetAnimeByMALID(id)
 
 	// Encoding the return value
-	json.NewEncoder(w).Encode(animeEx)
+	if anime != nil {
+		json.NewEncoder(w).Encode(anime.JSON())
+	} else {
+		json.NewEncoder(w).Encode(nil)
+	}
 }
