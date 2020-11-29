@@ -3,6 +3,8 @@ package scraper
 import (
 	"log"
 	"os"
+	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -30,12 +32,13 @@ func AnimeList() {
 			// Extracting anime title
 			extract := element.Text
 			idx := strings.LastIndex(extract, " (")
-			year, _ := strconv.ParseInt(extract[idx+2:len(extract)-1], 10, 16)
+			year := extract[idx+2 : len(extract)-1]
+			intYear, _ := strconv.ParseInt(year, 10, 16)
 
 			anime := models.Anime{
-				ID:   strings.ToLower(strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " ")),
+				ID:   strings.ToLower(strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " ")) + year,
 				Name: strings.Trim(strings.Replace(extract[:idx], "\"", "", -1), " "),
-				Year: uint16(year),
+				Year: uint16(intYear),
 			}
 
 			// Appending extracted anime title
@@ -70,7 +73,8 @@ func AnimeInfo() {
 	collector.OnHTML(".md.wiki > h3", func(e *colly.HTMLElement) {
 
 		// Getting the Anime index
-		targetID := strings.ToLower(strings.Trim(strings.Replace(e.Text, " ", "", -1), " "))
+		year := path.Base(e.Request.URL.Path)
+		targetID := strings.ToLower(strings.Trim(strings.Replace(e.Text, " ", "", -1), " ")) + year
 		index, _ := utils.Cache.GetAnimeByID(targetID)
 
 		if index > -1 {
@@ -80,11 +84,11 @@ func AnimeInfo() {
 
 			// Extracting the MAL ID
 			mal := e.ChildAttr("a", "href")
-			idx := strings.LastIndex(mal, "/anime/")
-			extr := mal[idx+len("/anime/") : len(mal)-1]
-			id, err := strconv.ParseInt(extr, 10, 32)
+			re := regexp.MustCompile("[0-9]+")
+			res := re.FindAllString(mal, -1)
 
-			if err == nil {
+			if len(res) > 0 {
+				id, _ := strconv.Atoi(res[0])
 				anime.MALID = uint16(id)
 			}
 
@@ -99,7 +103,6 @@ func AnimeInfo() {
 				}
 			}
 
-			// log.Printf("%+v\n", anime)
 			count++
 		} else {
 			log.Printf("Anime “%s” not found", targetID)
