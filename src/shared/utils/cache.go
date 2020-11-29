@@ -37,6 +37,7 @@ func LoadCache() bool {
 
 // SaveCache saves the data
 func SaveCache(cache models.Cache) {
+	log.Println("Saving cache...")
 
 	// Constructing the cache file
 	absPath, _ := filepath.Abs(".")
@@ -46,5 +47,8 @@ func SaveCache(cache models.Cache) {
 	file, _ := json.MarshalIndent(cache, "", " ")
 
 	// Writing to the export file
+	_ = os.Mkdir("data", 0755)
 	_ = ioutil.WriteFile(path, file, 0644)
+
+	log.Println("Cache saved in " + path)
 }

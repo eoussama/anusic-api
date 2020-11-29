@@ -21,7 +21,6 @@ FROM scratch AS bin
 
 # Copying the binary
 COPY --from=build /go/bin/anusic-api /
-COPY --from=build /go/src/github.com/eoussama/anusic-api/data /data
 COPY --from=build /go/src/github.com/eoussama/anusic-api/config /config
 
 # Exposing the port

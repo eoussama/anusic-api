@@ -19,9 +19,9 @@ type Anime struct {
 type AnimeEx struct {
 	ID       uint16   `json:"id"`
 	Name     string   `json:"name"`
-	AltNames []string `json:"altNames"`
+	AltNames []string `json:"altNames,omitempty"`
 	Year     uint16   `json:"year"`
-	Themes   []Theme  `json:"themes"`
+	Themes   []Theme  `json:"themes,omitempty"`
 }
 
 // GetLink constructs the Anime info link
