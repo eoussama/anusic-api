@@ -34,7 +34,7 @@ func AnimeList() {
 			extract := element.Text
 			idx := strings.LastIndex(extract, " (")
 			year := extract[idx+2 : len(extract)-1]
-			intYear := Yearparser(year)
+			intYear := parseYear(year)
 
 			anime := models.Anime{
 				ID:   strings.ToLower(strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " ")) + year,
@@ -54,16 +54,6 @@ func AnimeList() {
 
 	utils.Cache.Anime = animeTitles
 	log.Printf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start))
-}
-
-// Yearparser remove any characters from year and return an int
-func Yearparser(x string) uint16 {
-	reg, err := regexp.Compile("[^0-9]*")
-	if err != nil {
-		log.Fatal(err)
-	}
-	ret, _ := strconv.ParseInt(reg.ReplaceAllString(x, ""), 10, 16)
-	return uint16(ret)
 }
 
 // AnimeInfo scraps Anime info
