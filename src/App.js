@@ -58,8 +58,9 @@ export default class App extends Component {
                 <a
                   className="list-group-item list-group-item-action"
                   href={`https://myanimelist.net/anime/${e.id}`}
-                  target="_blank" rel="noreferrer"
-                  key={i}        
+                  target="_blank"
+                  rel="noreferrer"
+                  key={i}
                 >
                   <span className="name">{e.name}</span>
                   {e.year
