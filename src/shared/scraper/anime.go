@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/eoussama/anusic-api/src/shared/models"
 	"github.com/eoussama/anusic-api/src/shared/utils"
 	"github.com/gocolly/colly"
@@ -83,6 +84,9 @@ func AnimeInfo() {
 
 		if index > -1 {
 
+			// Initializing the themes table selection
+			var tableSelection *goquery.Selection
+
 			// Getting the respective Anime
 			anime := &utils.Cache.Anime[index]
 
@@ -105,7 +109,14 @@ func AnimeInfo() {
 				for i := 0; i < len(altNamesFrg); i++ {
 					anime.AltNames = append(anime.AltNames, altNamesFrg[i])
 				}
+
+				tableSelection = e.DOM.Next().Next()
+			} else {
+				tableSelection = e.DOM.Next()
 			}
+
+			// Scrapping themes
+			Themes(anime.MALID, tableSelection)
 
 			count++
 		} else {
