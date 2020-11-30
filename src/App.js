@@ -62,7 +62,6 @@ export default class App extends Component {
                   key={i}        
                 >
                   <span className="name">{e.name}</span>
-fdgdfh
                   {e.year
                     ? <span className="badge badge-secondary float-right">{e.year}</span>
                     : ''}
