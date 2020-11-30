@@ -21,7 +21,7 @@ export default class App extends Component {
     return (
       <React.Fragment>
         <nav className="navbar sticky-top navbar-light bg-light px-5">
-          <a className="navbar-brand">Anusic React</a>
+          <a href="/#" className="navbar-brand">Anusic React</a>
           <div className="form-inline">
             <input
               className="form-control mr-sm-2"
@@ -58,17 +58,16 @@ export default class App extends Component {
                 <a
                   className="list-group-item list-group-item-action"
                   href={`https://myanimelist.net/anime/${e.id}`}
-                  target="_blank"
-                  key={i}
+                  target="_blank" rel="noreferrer"
+                  key={i}        
                 >
                   <span className="name">{e.name}</span>
-
                   {e.year
                     ? <span className="badge badge-secondary float-right">{e.year}</span>
                     : ''}
 
                   {e.altNames && e.altNames.length > 0
-                    ? <p className="alt">{e.altNames}</p>
+                    ? <p className="alt">{e.altNames.join(",")}</p>
                     : ''}
                 </a>
               ))
