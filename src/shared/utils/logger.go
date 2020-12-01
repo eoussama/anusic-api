@@ -5,11 +5,14 @@ import (
 	"os"
 )
 
-// file path of our logs
-var path = "logs/logs.txt"
+var WarningLogger *log.Logger
+var InfoLogger *log.Logger
+var ErrorLogger *log.Logger
 
-//setting up logs type
-func Log(txt string, typ int) {
+// file path of our logs
+var path = "logs/logs.log"
+
+func init() {
 	if err := ensureDir("logs"); err != nil {
 		os.Exit(1)
 	}
@@ -17,13 +20,20 @@ func Log(txt string, typ int) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
+	ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+}
+
+//setting up logs type
+func Log(txt string, typ int) {
 	switch typ {
 	case 0:
-		log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile).Print(txt)
+		InfoLogger.Print(txt)
 	case 1:
-		log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile).Print(txt)
+		WarningLogger.Print(txt)
 	default:
-		log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile).Print(txt)
+		ErrorLogger.Print(txt)
 	}
 
 }
