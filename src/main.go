@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"os"
 
+	"github.com/eoussama/anusic-api/src/shared/enums"
 	hdlr "github.com/eoussama/anusic-api/src/shared/handlers"
 	"github.com/eoussama/anusic-api/src/shared/middlewares"
 	"github.com/eoussama/anusic-api/src/shared/scraper"
@@ -16,7 +16,6 @@ import (
 )
 
 func main() {
-	log.SetPrefix("[Anusic API] ")
 
 	// Loading environment variables
 	utils.LoadEnvVars()
@@ -45,6 +44,6 @@ func main() {
 	corsObj := handlers.AllowedOrigins([]string{"*"})
 
 	// Starting
-	log.Println("Starting...")
+	utils.Log("Starting...", enums.LogInfo)
 	http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(corsObj)(router))
 }

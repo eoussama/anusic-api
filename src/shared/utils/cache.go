@@ -3,10 +3,10 @@ package utils
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/eoussama/anusic-api/src/shared/enums"
 	"github.com/eoussama/anusic-api/src/shared/models"
 )
 
@@ -19,7 +19,7 @@ var Cache models.Cache = models.Cache{}
 
 // LoadCache loads the cache files
 func LoadCache() bool {
-	log.Println("Loading cache...")
+	Log("Loading cache...", enums.LogInfo)
 
 	// Constructing the cache file
 	absPath, _ := filepath.Abs(".")
@@ -41,7 +41,7 @@ func LoadCache() bool {
 
 // SaveCache saves the data
 func SaveCache(cache models.Cache) {
-	log.Println("Saving cache...")
+	Log("Saving cache...", enums.LogInfo)
 
 	// Constructing the cache file
 	absPath, _ := filepath.Abs(".")
@@ -55,5 +55,5 @@ func SaveCache(cache models.Cache) {
 	_ = os.Mkdir(directoryPath, 0755)
 	_ = ioutil.WriteFile(filePath, file, 0644)
 
-	log.Println("Cache saved in " + filePath)
+	Log("Cache saved in "+filePath, enums.LogInfo)
 }

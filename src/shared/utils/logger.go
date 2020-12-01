@@ -1,51 +1,58 @@
 package utils
 
 import (
+	"io"
 	"log"
 	"os"
+	"path/filepath"
 )
 
-var WarningLogger *log.Logger
+// Logging dump location
+var logDirectory = "logs"
+var logFile = "anusic-api.log"
+
+// InfoLogger hosts the logger that logs info
 var InfoLogger *log.Logger
+
+// WarningLogger hosts the logger that logs warnings
+var WarningLogger *log.Logger
+
+// ErrorLogger hosts the logger that logs errors
 var ErrorLogger *log.Logger
 
-// file path of our logs
-var path = "logs/logs.log"
-
+// init initializes the logger
 func init() {
-	if err := ensureDir("logs"); err != nil {
-		os.Exit(1)
-	}
-	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
-	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+
+	// Constructing the logs path
+	absPath, _ := filepath.Abs(".")
+	directoryPath := filepath.Join(absPath, logDirectory)
+	filePath := filepath.Join(directoryPath, logFile)
+
+	// Ensuring the logs directory
+	os.Mkdir(directoryPath, 0777)
+
+	// Opening the logging file
+	file, _ := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+
+	// Initializing the loggers
+	InfoLogger = log.New(file, "[INFO] ", log.Ldate|log.Ltime|log.Lshortfile)
+	WarningLogger = log.New(file, "[WARNING] ", log.Ldate|log.Ltime|log.Lshortfile)
+	ErrorLogger = log.New(file, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
+
+	// Setting both the console and the logging file as output targets
+	InfoLogger.SetOutput(io.MultiWriter(os.Stdout, file))
+	WarningLogger.SetOutput(io.MultiWriter(os.Stdout, file))
+	ErrorLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 }
 
-//setting up logs type
-func Log(txt string, typ int) {
-	switch typ {
-	case 0:
-		InfoLogger.Print(txt)
+// Log handles logging
+func Log(input interface{}, logType int) {
+	switch logType {
 	case 1:
-		WarningLogger.Print(txt)
+		WarningLogger.Println(input)
+	case 2:
+		ErrorLogger.Println(input)
 	default:
-		ErrorLogger.Print(txt)
-	}
-
-}
-
-//Create directory if doesn't exist
-func ensureDir(dirName string) error {
-
-	err := os.Mkdir(dirName, os.ModeDir)
-
-	if err == nil || os.IsExist(err) {
-		return nil
-	} else {
-		return err
+		InfoLogger.Println(input)
 	}
 }

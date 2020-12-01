@@ -1,7 +1,7 @@
 package scraper
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path"
 	"regexp"
@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/eoussama/anusic-api/src/shared/enums"
 	"github.com/eoussama/anusic-api/src/shared/models"
 	"github.com/eoussama/anusic-api/src/shared/utils"
 	"github.com/gocolly/colly"
@@ -17,7 +18,7 @@ import (
 
 // AnimeList scraps the entire anime list
 func AnimeList() {
-	log.Println("Scraping Anime list...")
+	utils.Log("Scraping Anime list...", enums.LogInfo)
 	start := time.Now()
 
 	// Initializing the scraper
@@ -53,12 +54,12 @@ func AnimeList() {
 	collector.Wait()
 
 	utils.Cache.Anime = animeTitles
-	log.Printf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start))
+	utils.Log(fmt.Sprintf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start)), enums.LogInfo)
 }
 
 // AnimeInfo scraps Anime info
 func AnimeInfo() {
-	log.Println("Scraping Animeq  Info...")
+	utils.Log("Scraping Anime Info...", enums.LogInfo)
 
 	start := time.Now()
 	count := 0
@@ -120,7 +121,7 @@ func AnimeInfo() {
 
 			count++
 		} else {
-			log.Printf("Anime “%s” not found", targetID)
+			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogInfo)
 		}
 	})
 
@@ -136,5 +137,5 @@ func AnimeInfo() {
 	// Waiting for the scraping to resolve
 	collector.Wait()
 
-	log.Printf("Fetched %d Anime info in %v", count, time.Since(start))
+	utils.Log(fmt.Sprintf("Fetched %d Anime info in %v", count, time.Since(start)), enums.LogInfo)
 }

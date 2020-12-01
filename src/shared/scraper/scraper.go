@@ -1,10 +1,12 @@
 package scraper
 
 import (
-	"log"
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/eoussama/anusic-api/src/shared/enums"
+	"github.com/eoussama/anusic-api/src/shared/utils"
 )
 
 // Scrap scraps all data
@@ -29,7 +31,7 @@ func parseYear(x string) uint16 {
 	reg, err := regexp.Compile("[^0-9]*")
 
 	if err != nil {
-		log.Fatal(err)
+		utils.Log(err, enums.LogError)
 	}
 
 	ret, _ := strconv.ParseInt(reg.ReplaceAllString(x, ""), 10, 16)
