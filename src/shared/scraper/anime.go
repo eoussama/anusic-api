@@ -138,4 +138,9 @@ func AnimeInfo() {
 	collector.Wait()
 
 	utils.Log(fmt.Sprintf("Fetched %d Anime info in %v", count, time.Since(start)), enums.LogInfo)
+
+	// Raising a warning if the fetched info does not match the total Anime titles
+	if count < len(utils.Cache.Anime) {
+		utils.Log(fmt.Sprintf("Failed to fetch info of %d Anime title(s)", len(utils.Cache.Anime)-count), enums.LogWarning)
+	}
 }
