@@ -19,11 +19,11 @@ func Themes(malID uint16, e *goquery.Selection) {
 		theme.AnimeMALID = malID
 
 		s.Children().Each(func(i int, s *goquery.Selection) {
+			var reg *regexp.Regexp
+			var dump string = s.Text()
 
 			// Theme title
 			if i == 0 {
-				var reg *regexp.Regexp
-				dump := s.Text()
 				fragments := getTitleFragments(dump)
 
 				// Extracting the title
@@ -59,6 +59,13 @@ func Themes(malID uint16, e *goquery.Selection) {
 					theme.Order = 1
 				}
 			}
+
+			// Episodes
+			if i == 2 {
+
+				// Extracting the episodes
+				theme.Episodes = sanitizedSplit(dump)
+			}
 		})
 
 		fmt.Printf("%+v\n", theme)
@@ -74,6 +81,17 @@ func getTitleFragments(dump string) []string {
 		if !strings.Contains(frag, "\"") {
 			ret = append(ret, frag)
 		}
+	}
+
+	return ret
+}
+
+// Splits and trims a string
+func sanitizedSplit(dump string) []string {
+	var ret []string
+
+	for _, frag := range strings.Split(dump, ",") {
+		ret = append(ret, strings.TrimSpace(frag))
 	}
 
 	return ret

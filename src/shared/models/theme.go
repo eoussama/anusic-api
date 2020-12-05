@@ -6,8 +6,8 @@ type Theme struct {
 	Name       string
 	ThemeType  uint8
 	Order      uint8
+	Episodes   []string
 	// Link         string
-	// Episodes     []string
 	// Format       int8
 	// Resolution   string
 	// HasSpoilers  bool

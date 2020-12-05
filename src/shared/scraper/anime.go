@@ -116,10 +116,8 @@ func AnimeInfo() {
 				tableSelection = e.DOM.Next()
 			}
 
-			if anime.MALID == 4896 || anime.MALID == 6377 {
-				// Scrapping themes
-				Themes(anime.MALID, tableSelection)
-			}
+			// Scrapping themes
+			Themes(anime.MALID, tableSelection)
 
 			count++
 		} else {
