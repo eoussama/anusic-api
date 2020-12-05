@@ -63,7 +63,7 @@ func AnimeInfo() {
 
 	start := time.Now()
 	count := 0
-	async := false
+	async := true
 
 	// Initializing the scraper
 	collector := colly.NewCollector(colly.Async(async))
@@ -121,7 +121,7 @@ func AnimeInfo() {
 
 			count++
 		} else {
-			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogInfo)
+			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
 		}
 	})
 
