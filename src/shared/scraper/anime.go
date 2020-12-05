@@ -1,7 +1,7 @@
 package scraper
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path"
 	"regexp"
@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
+	"github.com/eoussama/anusic-api/src/shared/enums"
 	"github.com/eoussama/anusic-api/src/shared/models"
 	"github.com/eoussama/anusic-api/src/shared/utils"
 	"github.com/gocolly/colly"
@@ -16,7 +18,7 @@ import (
 
 // AnimeList scraps the entire anime list
 func AnimeList() {
-	log.Println("Scraping Anime list...")
+	utils.Log("Scraping Anime list...", enums.LogInfo)
 	start := time.Now()
 
 	// Initializing the scraper
@@ -33,12 +35,12 @@ func AnimeList() {
 			extract := element.Text
 			idx := strings.LastIndex(extract, " (")
 			year := extract[idx+2 : len(extract)-1]
-			intYear, _ := strconv.ParseInt(year, 10, 16)
+			intYear := parseYear(year)
 
 			anime := models.Anime{
 				ID:   strings.ToLower(strings.Trim(strings.Replace(extract[:idx], " ", "", -1), " ")) + year,
 				Name: strings.Trim(strings.Replace(extract[:idx], "\"", "", -1), " "),
-				Year: uint16(intYear),
+				Year: intYear,
 			}
 
 			// Appending extracted anime title
@@ -52,16 +54,16 @@ func AnimeList() {
 	collector.Wait()
 
 	utils.Cache.Anime = animeTitles
-	log.Printf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start))
+	utils.Log(fmt.Sprintf("Fetched %d Anime titles in %v", len(animeTitles), time.Since(start)), enums.LogInfo)
 }
 
 // AnimeInfo scraps Anime info
 func AnimeInfo() {
-	log.Println("Scraping Anime Info...")
+	utils.Log("Scraping Anime Info...", enums.LogInfo)
 
 	start := time.Now()
 	count := 0
-	async := false
+	async := true
 
 	// Initializing the scraper
 	collector := colly.NewCollector(colly.Async(async))
@@ -82,6 +84,9 @@ func AnimeInfo() {
 		index, _ := utils.Cache.GetAnimeByID(targetID)
 
 		if index > -1 {
+
+			// Initializing the themes table selection
+			var tableSelection *goquery.Selection
 
 			// Getting the respective Anime
 			anime := &utils.Cache.Anime[index]
@@ -105,11 +110,18 @@ func AnimeInfo() {
 				for i := 0; i < len(altNamesFrg); i++ {
 					anime.AltNames = append(anime.AltNames, altNamesFrg[i])
 				}
+
+				tableSelection = e.DOM.Next().Next()
+			} else {
+				tableSelection = e.DOM.Next()
 			}
+
+			// Scrapping themes
+			Themes(anime.MALID, tableSelection)
 
 			count++
 		} else {
-			log.Printf("Anime “%s” not found", targetID)
+			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
 		}
 	})
 
@@ -125,5 +137,10 @@ func AnimeInfo() {
 	// Waiting for the scraping to resolve
 	collector.Wait()
 
-	log.Printf("Fetched %d Anime info in %v", count, time.Since(start))
+	utils.Log(fmt.Sprintf("Fetched %d Anime info in %v", count, time.Since(start)), enums.LogInfo)
+
+	// Raising a warning if the fetched info does not match the total Anime titles
+	if count < len(utils.Cache.Anime) {
+		utils.Log(fmt.Sprintf("Failed to fetch info of %d Anime title(s)", len(utils.Cache.Anime)-count), enums.LogWarning)
+	}
 }

@@ -12,7 +12,6 @@ type Anime struct {
 	Name     string
 	AltNames []string
 	Year     uint16
-	Themes   []Theme
 }
 
 // AnimeEx export type
@@ -36,6 +35,6 @@ func (a Anime) JSON() AnimeEx {
 		Name:     a.Name,
 		AltNames: a.AltNames,
 		Year:     a.Year,
-		Themes:   a.Themes,
+		Themes:   []Theme{},
 	}
 }

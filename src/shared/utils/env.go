@@ -1,21 +1,21 @@
 package utils
 
 import (
-	"log"
 	"path/filepath"
 
+	"github.com/eoussama/anusic-api/src/shared/enums"
 	"github.com/joho/godotenv"
 )
 
 // LoadEnvVars loads the environment variables
 func LoadEnvVars() {
-	log.Println("Loading env vars...")
+	Log("Loading env vars...", enums.LogInfo)
 
 	absPath, _ := filepath.Abs(".")
 	path := filepath.Join(absPath, "config", ".env")
 
 	err := godotenv.Load(path)
 	if err != nil {
-		log.Fatalln("Error loading .env file")
+		Log("Error loading .env file", enums.LogError)
 	}
 }
