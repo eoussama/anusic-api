@@ -35,9 +35,9 @@ func init() {
 	file, _ := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 
 	// Initializing the loggers
-	InfoLogger = log.New(file, "[INFO] ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarningLogger = log.New(file, "[WARNING] ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(file, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
+	InfoLogger = log.New(file, "[INFO] ", log.Ldate|log.Ltime)
+	WarningLogger = log.New(file, "[WARNING] ", log.Ldate|log.Ltime)
+	ErrorLogger = log.New(file, "[ERROR] ", log.Ldate|log.Ltime)
 
 	// Setting both the console and the logging file as output targets
 	InfoLogger.SetOutput(io.MultiWriter(os.Stdout, file))
