@@ -23,7 +23,8 @@ func genYears() []string {
 		years = append(years, strconv.Itoa(year))
 	}
 
-	return append(years, []string{"90s", "80s", "70s", "60s"}...)
+	return []string{"2009"}
+	// return append(years, []string{"90s", "80s", "70s", "60s"}...)
 }
 
 // parseYear remove any characters from year and return an int

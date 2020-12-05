@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -26,11 +27,11 @@ func Themes(malID uint16, e *goquery.Selection) {
 				fragments := getTitleFragments(dump)
 
 				// Extracting the title
-				reg = regexp.MustCompile(`".*"`)
+				reg = regexp.MustCompile(`"(.*)"`)
 				themeTitle := reg.FindStringSubmatch(dump)
 
-				if len(themeTitle) > 0 {
-					theme.Name = themeTitle[0][1 : len(themeTitle[0])-1]
+				if len(themeTitle) > 1 {
+					theme.Name = themeTitle[1]
 				}
 
 				// Extracting the type
@@ -48,7 +49,7 @@ func Themes(malID uint16, e *goquery.Selection) {
 				}
 
 				// Extracting the order
-				reg = regexp.MustCompile(`[0-9]*`)
+				reg = regexp.MustCompile(`[0-9]+`)
 				themeOrder := reg.FindStringSubmatch(fragments[0])
 
 				if len(themeOrder) > 0 {
@@ -60,7 +61,7 @@ func Themes(malID uint16, e *goquery.Selection) {
 			}
 		})
 
-		// fmt.Printf("%+v\n", theme)
+		fmt.Printf("%+v\n", theme)
 		utils.Cache.Themes = append(utils.Cache.Themes, theme)
 	})
 }

@@ -116,12 +116,14 @@ func AnimeInfo() {
 				tableSelection = e.DOM.Next()
 			}
 
-			// Scrapping themes
-			Themes(anime.MALID, tableSelection)
+			if anime.MALID == 4896 || anime.MALID == 6377 {
+				// Scrapping themes
+				Themes(anime.MALID, tableSelection)
+			}
 
 			count++
 		} else {
-			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
+			// utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
 		}
 	})
 
