@@ -66,6 +66,16 @@ func Themes(malID uint16, e *goquery.Selection) {
 				// Extracting the episodes
 				theme.Episodes = sanitizedSplit(dump)
 			}
+
+			// Notes
+			if i == 3 {
+
+				// Extracting NSFW status
+				theme.IsNSFW = strings.Contains(strings.ToLower(dump), strings.ToLower("nsfw"))
+
+				// Extracting spoilers status
+				theme.HasSpoilers = strings.Contains(strings.ToLower(dump), strings.ToLower("spoiler"))
+			}
 		})
 
 		fmt.Printf("%+v\n", theme)
