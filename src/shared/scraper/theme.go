@@ -13,7 +13,10 @@ import (
 
 // Themes scraps related theme songs
 func Themes(malID uint16, e *goquery.Selection) {
+	var lastThemeIndex int
+
 	e.ChildrenFiltered("tbody").Children().Each(func(_ int, s *goquery.Selection) {
+		sourceRow := false
 		theme := models.Theme{}
 		theme.AnimeMALID = malID
 
@@ -23,6 +26,12 @@ func Themes(malID uint16, e *goquery.Selection) {
 
 			// Theme title
 			if i == 0 {
+
+				// Checking if the row is a follow up link
+				if len(dump) == 0 {
+					sourceRow = true
+				}
+
 				fragments := getTitleFragments(dump)
 
 				// Extracting the title
@@ -100,7 +109,11 @@ func Themes(malID uint16, e *goquery.Selection) {
 				}
 
 				// Adding the theme to the Anime title
-				theme.Sources = append(theme.Sources, source)
+				if !sourceRow {
+					theme.Sources = append(theme.Sources, source)
+				} else {
+					utils.Cache.Themes[lastThemeIndex].Sources = append(utils.Cache.Themes[lastThemeIndex].Sources, source)
+				}
 			}
 
 			// Episodes
@@ -121,8 +134,11 @@ func Themes(malID uint16, e *goquery.Selection) {
 			}
 		})
 
-		// fmt.Printf("%+v\n", theme)
-		utils.Cache.Themes = append(utils.Cache.Themes, theme)
+		if !sourceRow {
+			// fmt.Printf("%+v\n", theme)
+			utils.Cache.Themes = append(utils.Cache.Themes, theme)
+			lastThemeIndex = len(utils.Cache.Themes) - 1
+		}
 	})
 }
 
