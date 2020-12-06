@@ -72,7 +72,7 @@ func Themes(malID uint16, e *goquery.Selection) {
 			if i == 1 {
 				source := models.Source{}
 				reg = regexp.MustCompile(`\((.*)\)`)
-				tags := reg.FindStringSubmatch(dump)
+				fragments := reg.FindStringSubmatch(dump)
 
 				// Extracting the link
 				source.Link, _ = s.Children().Attr("href")
@@ -86,25 +86,30 @@ func Themes(malID uint16, e *goquery.Selection) {
 				}
 
 				// Extracting the resolution
-				if len(tags) > 1 {
+				if len(fragments) > 1 {
 					reg = regexp.MustCompile(`\d+`)
-					res := reg.FindStringSubmatch(tags[0])
+					res := reg.FindStringSubmatch(fragments[0])
 
 					if len(res) > 0 {
 						source.Resolution = res[0]
 					}
 				}
 
-				if len(tags) > 0 {
+				// Extracting the tags
+				if len(fragments) > 1 {
+					source.Tags = getSourceTags(fragments[1], source)
+				}
+
+				if len(fragments) > 1 {
 
 					// Extracting the lyrics status
-					source.HasLyrics = strings.Contains(strings.ToLower(tags[0]), strings.ToLower("lyrics"))
+					source.HasLyrics = strings.Contains(strings.ToLower(fragments[1]), strings.ToLower("lyrics"))
 
 					// Extracting the over status
-					source.IsOver = strings.Contains(strings.ToLower(tags[0]), strings.ToLower("over"))
+					source.IsOver = strings.Contains(strings.ToLower(fragments[1]), strings.ToLower("over"))
 
 					// Extracting the trans status
-					source.IsTransition = strings.Contains(strings.ToLower(tags[0]), strings.ToLower("trans"))
+					source.IsTransition = strings.Contains(strings.ToLower(fragments[1]), strings.ToLower("trans"))
 
 				}
 
@@ -135,7 +140,6 @@ func Themes(malID uint16, e *goquery.Selection) {
 		})
 
 		if !sourceRow {
-			// fmt.Printf("%+v\n", theme)
 			utils.Cache.Themes = append(utils.Cache.Themes, theme)
 			lastThemeIndex = len(utils.Cache.Themes) - 1
 		}
@@ -143,10 +147,10 @@ func Themes(malID uint16, e *goquery.Selection) {
 }
 
 // Gets sanitized fragments from the title dump
-func getTitleFragments(dump string) []string {
+func getTitleFragments(input string) []string {
 	var ret []string
 
-	for _, frag := range strings.Split(dump, " ") {
+	for _, frag := range strings.Split(input, " ") {
 		if !strings.Contains(frag, "\"") {
 			ret = append(ret, frag)
 		}
@@ -156,11 +160,26 @@ func getTitleFragments(dump string) []string {
 }
 
 // Splits and trims a string
-func sanitizedSplit(dump string) []string {
+func sanitizedSplit(input string) []string {
 	var ret []string
 
-	for _, frag := range strings.Split(dump, ",") {
+	for _, frag := range strings.Split(input, ",") {
 		ret = append(ret, strings.TrimSpace(frag))
+	}
+
+	return ret
+}
+
+// Extracts the source tags
+func getSourceTags(input string, source models.Source) []string {
+	var ret []string = []string{}
+
+	for _, frag := range strings.Split(input, ",") {
+		sanFrag := strings.TrimSpace(strings.ToLower(frag))
+
+		if sanFrag != "lyrics" && sanFrag != "trans" && sanFrag != "over" && sanFrag != source.Resolution {
+			ret = append(ret, strings.TrimSpace(frag))
+		}
 	}
 
 	return ret

@@ -8,4 +8,5 @@ type Source struct {
 	HasLyrics    bool
 	IsTransition bool
 	IsOver       bool
+	Tags         []string
 }
