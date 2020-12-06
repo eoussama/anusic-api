@@ -9,11 +9,5 @@ type Theme struct {
 	Episodes    []string
 	IsNSFW      bool
 	HasSpoilers bool
-	// Link         string
-	// Format       int8
-	// Resolution   string
-	// IsCreditless bool
-	// HasLyrics    bool
-	// IsTransition bool
-	// IsOver       bool
+	Sources     []Source
 }

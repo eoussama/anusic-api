@@ -1,7 +1,6 @@
 package scraper
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -60,6 +59,50 @@ func Themes(malID uint16, e *goquery.Selection) {
 				}
 			}
 
+			// Links
+			if i == 1 {
+				source := models.Source{}
+				reg = regexp.MustCompile(`\((.*)\)`)
+				tags := reg.FindStringSubmatch(dump)
+
+				// Extracting the link
+				source.Link, _ = s.Children().Attr("href")
+
+				// Extracting the format
+				reg = regexp.MustCompile(`([\w]*)`)
+				format := reg.FindStringSubmatch(dump)
+
+				if len(format) > 1 {
+					source.Format = strings.ToLower(format[1])
+				}
+
+				// Extracting the resolution
+				if len(tags) > 1 {
+					reg = regexp.MustCompile(`\d+`)
+					res := reg.FindStringSubmatch(tags[0])
+
+					if len(res) > 0 {
+						source.Resolution = res[0]
+					}
+				}
+
+				if len(tags) > 0 {
+
+					// Extracting the lyrics status
+					source.HasLyrics = strings.Contains(strings.ToLower(tags[0]), strings.ToLower("lyrics"))
+
+					// Extracting the over status
+					source.IsOver = strings.Contains(strings.ToLower(tags[0]), strings.ToLower("over"))
+
+					// Extracting the trans status
+					source.IsTransition = strings.Contains(strings.ToLower(tags[0]), strings.ToLower("trans"))
+
+				}
+
+				// Adding the theme to the Anime title
+				theme.Sources = append(theme.Sources, source)
+			}
+
 			// Episodes
 			if i == 2 {
 
@@ -78,7 +121,7 @@ func Themes(malID uint16, e *goquery.Selection) {
 			}
 		})
 
-		fmt.Printf("%+v\n", theme)
+		// fmt.Printf("%+v\n", theme)
 		utils.Cache.Themes = append(utils.Cache.Themes, theme)
 	})
 }
