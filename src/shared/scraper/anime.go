@@ -63,7 +63,7 @@ func AnimeInfo() {
 
 	start := time.Now()
 	count := 0
-	async := true
+	async := false
 
 	// Initializing the scraper
 	collector := colly.NewCollector(colly.Async(async))
