@@ -16,7 +16,7 @@ func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Sanitizing the export struct
 	for _, anime := range utils.Cache.Anime {
-		animeTitles = append(animeTitles, anime.JSON())
+		animeTitles = append(animeTitles, anime.Format())
 	}
 
 	// Encoding the return value

@@ -32,3 +32,18 @@ func (c Cache) GetAnimeByID(id string) (int, *Anime) {
 
 	return -1, nil
 }
+
+// GetAnimeThemes gets all themes associated with an Anime
+func (c Cache) GetAnimeThemes(anime Anime) []Theme {
+	var retrievedThemes []Theme = []Theme{}
+
+	if len(c.Themes) > 0 {
+		for _, theme := range c.Themes {
+			if theme.AnimeMALID == anime.MALID {
+				retrievedThemes = append(retrievedThemes, theme)
+			}
+		}
+	}
+
+	return retrievedThemes
+}

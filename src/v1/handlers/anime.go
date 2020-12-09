@@ -21,7 +21,7 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Encoding the return value
 	if anime != nil {
-		json.NewEncoder(w).Encode(anime.JSON())
+		json.NewEncoder(w).Encode(utils.FormatAnime(*anime))
 	} else {
 		json.NewEncoder(w).Encode(nil)
 	}
