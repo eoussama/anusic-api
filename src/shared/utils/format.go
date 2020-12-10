@@ -20,7 +20,8 @@ func FormatAnime(anime models.Anime) models.AnimeEx {
 			formatedAnime.Collections = append(formatedAnime.Collections, collection)
 		}
 	} else {
-		formatedAnime.Collections = []models.CollectionEx{{}}
+		formatedAnime.Collections = []models.CollectionEx{{Name: "Original Japanese Version"}}
+		collections = []models.Collection{{}}
 	}
 
 	// Getting the themes
