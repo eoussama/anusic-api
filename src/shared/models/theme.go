@@ -2,18 +2,44 @@ package models
 
 // Theme song type
 type Theme struct {
-	AnimeMALID uint16
-	Name       string
-	ThemeType  uint8
-	Order      uint8
-	// Link         string
-	// Episodes     []string
-	// Format       int8
-	// Resolution   string
-	// HasSpoilers  bool
-	// IsNSFW       bool
-	// IsCreditless bool
-	// HasLyrics    bool
-	// IsTransition bool
-	// IsOver       bool
+	AnimeMALID   uint16
+	CollectionID string
+	Name         string
+	ThemeType    uint8
+	Order        uint8
+	Episodes     []string
+	IsNSFW       bool
+	HasSpoilers  bool
+	Sources      []Source
+}
+
+// ThemeEx export type
+type ThemeEx struct {
+	Name        string     `json:"name"`
+	ThemeType   uint8      `json:"type"`
+	Order       uint8      `json:"order"`
+	Episodes    []string   `json:"episodes"`
+	IsNSFW      bool       `json:"isNSFW"`
+	HasSpoilers bool       `json:"hasSpoilers"`
+	Sources     []SourceEx `json:"sources,omitempty"`
+}
+
+// FormatEx formats the struct
+func (t Theme) FormatEx() ThemeEx {
+	sources := []SourceEx{}
+
+	// Formating the sources
+	for _, source := range t.Sources {
+		sources = append(sources, source.FormatEx())
+	}
+
+	return ThemeEx{
+		Name:        t.Name,
+		ThemeType:   t.ThemeType,
+		Order:       t.Order,
+		Episodes:    t.Episodes,
+		IsNSFW:      t.IsNSFW,
+		HasSpoilers: t.HasSpoilers,
+		Sources:     sources,
+	}
 }

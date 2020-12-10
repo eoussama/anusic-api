@@ -102,7 +102,7 @@ func AnimeInfo() {
 			}
 
 			// Extracting the alt name
-			if e.DOM.Next().Is("p") {
+			if e.DOM.Next().Is("p") && len(e.DOM.Next().Has("strong").Nodes) > 0 {
 				altNamesStr := strings.Replace(e.DOM.Next().Text(), "\"", "", -1)
 				altNamesFrg := strings.Split(altNamesStr, ",")
 				anime.AltNames = []string{}
