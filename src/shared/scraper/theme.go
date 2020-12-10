@@ -26,6 +26,9 @@ func Themes(malID uint16, e *goquery.Selection) {
 			// Constructing the collection's ID
 			collection.ID = fmt.Sprintf("%s-%s", strconv.Itoa(int(malID)), strings.ToLower(strings.Trim(strings.Replace(selection.Text(), " ", "", -1), " ")))
 
+			// Extracting the Anime associated with the collection
+			collection.AnimeMALID = malID
+
 			// Extracting the collection's name
 			collection.Name = selection.Text()
 

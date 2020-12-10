@@ -16,11 +16,11 @@ type Anime struct {
 
 // AnimeEx export type
 type AnimeEx struct {
-	ID       uint16    `json:"id"`
-	Name     string    `json:"name"`
-	AltNames []string  `json:"altNames,omitempty"`
-	Year     uint16    `json:"year"`
-	Themes   []ThemeEx `json:"themes,omitempty"`
+	ID          uint16         `json:"id"`
+	Name        string         `json:"name"`
+	AltNames    []string       `json:"altNames,omitempty"`
+	Year        uint16         `json:"year"`
+	Collections []CollectionEx `json:"collections,omitempty"`
 }
 
 // GetLink constructs the Anime info link
@@ -31,10 +31,10 @@ func (a Anime) GetLink() string {
 // FormatEx formats the struct
 func (a Anime) FormatEx() AnimeEx {
 	return AnimeEx{
-		ID:       a.MALID,
-		Name:     a.Name,
-		AltNames: a.AltNames,
-		Year:     a.Year,
-		Themes:   []ThemeEx{},
+		ID:          a.MALID,
+		Name:        a.Name,
+		AltNames:    a.AltNames,
+		Year:        a.Year,
+		Collections: []CollectionEx{},
 	}
 }

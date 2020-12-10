@@ -47,3 +47,18 @@ func (c Cache) GetAnimeThemes(anime Anime) []Theme {
 
 	return retrievedThemes
 }
+
+// GetCollections gets associated collections
+func (c Cache) GetCollections(anime Anime) []Collection {
+	var retrievedCollections []Collection = []Collection{}
+
+	if len(c.Collections) > 0 {
+		for _, collection := range c.Collections {
+			if collection.AnimeMALID == anime.MALID {
+				retrievedCollections = append(retrievedCollections, collection)
+			}
+		}
+	}
+
+	return retrievedCollections
+}
