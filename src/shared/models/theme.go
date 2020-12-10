@@ -15,24 +15,31 @@ type Theme struct {
 
 // ThemeEx export type
 type ThemeEx struct {
-	Name        string   `json:"name"`
-	ThemeType   uint8    `json:"type"`
-	Order       uint8    `json:"order"`
-	Episodes    []string `json:"episodes"`
-	IsNSFW      bool     `json:"isNSFW"`
-	HasSpoilers bool     `json:"hasSpoilers"`
-	Sources     []Source `json:"sources,omitempty"`
+	Name        string     `json:"name"`
+	ThemeType   uint8      `json:"type"`
+	Order       uint8      `json:"order"`
+	Episodes    []string   `json:"episodes"`
+	IsNSFW      bool       `json:"isNSFW"`
+	HasSpoilers bool       `json:"hasSpoilers"`
+	Sources     []SourceEx `json:"sources,omitempty"`
 }
 
-// Format formats the struct
-func (a Theme) Format() ThemeEx {
+// FormatEx formats the struct
+func (t Theme) FormatEx() ThemeEx {
+	sources := []SourceEx{}
+
+	// Formating the sources
+	for _, source := range t.Sources {
+		sources = append(sources, source.FormatEx())
+	}
+
 	return ThemeEx{
-		Name:        a.Name,
-		ThemeType:   a.ThemeType,
-		Order:       a.Order,
-		Episodes:    a.Episodes,
-		IsNSFW:      a.IsNSFW,
-		HasSpoilers: a.HasSpoilers,
-		Sources:     a.Sources,
+		Name:        t.Name,
+		ThemeType:   t.ThemeType,
+		Order:       t.Order,
+		Episodes:    t.Episodes,
+		IsNSFW:      t.IsNSFW,
+		HasSpoilers: t.HasSpoilers,
+		Sources:     sources,
 	}
 }

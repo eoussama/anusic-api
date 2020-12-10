@@ -28,8 +28,8 @@ func (a Anime) GetLink() string {
 	return os.Getenv("BASE") + strconv.Itoa(int(a.Year)) + "#" + a.ID
 }
 
-// Format formats the struct
-func (a Anime) Format() AnimeEx {
+// FormatEx formats the struct
+func (a Anime) FormatEx() AnimeEx {
 	return AnimeEx{
 		ID:       a.MALID,
 		Name:     a.Name,
