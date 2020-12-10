@@ -11,7 +11,8 @@ func FormatAnime(anime models.Anime) models.AnimeEx {
 	formatedAnime := anime.Format()
 
 	for _, theme := range Cache.GetAnimeThemes(anime) {
-		formatedAnime.Themes = append(formatedAnime.Themes, theme)
+		formatedAnime.Themes = append(formatedAnime.Themes, theme.Format())
 	}
+
 	return formatedAnime
 }
