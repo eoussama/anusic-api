@@ -10,26 +10,28 @@ func FormatAnime(anime models.Anime) models.AnimeEx {
 	// Formating the anime
 	formatedAnime := anime.FormatEx()
 
-	collections := Cache.GetCollections(anime)
+	associatedCols := Cache.GetCollections(anime)
+	formatedCols := []models.CollectionEx{}
 	themes := Cache.GetAnimeThemes(anime)
 
 	// Getting the collections
-	if len(collections) > 0 {
-		for _, col := range collections {
+	if len(associatedCols) > 0 {
+		for _, col := range associatedCols {
 			collection := col.FormatEx()
-			formatedAnime.Collections = append(formatedAnime.Collections, collection)
+			formatedCols = append(formatedCols, collection)
 		}
-	} else {
-		formatedAnime.Collections = []models.CollectionEx{{Name: "Original Japanese Version"}}
-		collections = []models.Collection{{}}
 	}
 
 	// Getting the themes
-	for index := range formatedAnime.Collections {
+	for index := range formatedCols {
 		for _, theme := range themes {
-			if collections[index].ID == theme.CollectionID {
-				formatedAnime.Collections[index].Themes = append(formatedAnime.Collections[index].Themes, theme.FormatEx())
+			if associatedCols[index].ID == theme.CollectionID {
+				formatedCols[index].Themes = append(formatedCols[index].Themes, theme.FormatEx())
 			}
+		}
+
+		if len(formatedCols[index].Themes) > 0 {
+			formatedAnime.Collections = append(formatedAnime.Collections, formatedCols[index])
 		}
 	}
 

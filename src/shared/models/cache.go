@@ -50,7 +50,7 @@ func (c Cache) GetAnimeThemes(anime Anime) []Theme {
 
 // GetCollections gets associated collections
 func (c Cache) GetCollections(anime Anime) []Collection {
-	var retrievedCollections []Collection = []Collection{}
+	var retrievedCollections []Collection = []Collection{{ID: "", Name: "Original Japanese Version"}}
 
 	if len(c.Collections) > 0 {
 		for _, collection := range c.Collections {
