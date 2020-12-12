@@ -65,7 +65,7 @@ func (a Anime) MatchYear(year string) bool {
 	for _, y := range strings.Split(year, ",") {
 		sanYear, _ := strconv.Atoi(y)
 
-		if a.Year == uint16(sanYear) {
+		if a.Year == uint16(sanYear) || len(year) == 0 {
 			return true
 		}
 	}
