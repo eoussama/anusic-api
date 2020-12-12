@@ -32,10 +32,12 @@ func main() {
 
 	// Creating routers
 	router := mux.NewRouter()
-	apiRouter := router.PathPrefix("/api/").Subrouter()
+	apiRouter := router.PathPrefix("/api").Subrouter()
 
-	router.Use(middlewares.ContentType)
-	router.HandleFunc("/", hdlr.IndexHandler).Methods("GET")
+	apiRouter.Use(middlewares.ContentType)
+
+	apiRouter.HandleFunc("/", hdlr.IndexHandler).Methods("GET")
+	apiRouter.HandleFunc("", hdlr.IndexHandler).Methods("GET")
 
 	// Initializing the v1 API
 	v1.Init(apiRouter)
