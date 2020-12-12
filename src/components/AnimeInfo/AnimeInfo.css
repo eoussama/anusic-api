@@ -22,3 +22,15 @@
 .tab {
 	padding: 15px 0 0 0;
 }
+
+.modal .spinner {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}
+
+.list-group-item-source {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}

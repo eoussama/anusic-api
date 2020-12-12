@@ -15,8 +15,11 @@ export default class App extends Component {
     list: [],
     anime: {},
     infoShown: false,
-    loading: false
+    loading: false,
+    infoLoading: false
   }
+
+  endPoint = 'https://anusic-api.herokuapp.com/api/v1';
 
   //#endregion
 
@@ -24,7 +27,7 @@ export default class App extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    Axios.get('https://anusic-api.herokuapp.com/api/v1/anime')
+    Axios.get(`${this.endPoint}/anime`)
       .then(e => {
         this.setState({ animeList: e.data, list: e.data, loading: false });
       })
@@ -65,11 +68,13 @@ export default class App extends Component {
             role="alert">
             <b>{this.state.list.length}</b> Anime fetched!
 
-            {this.state.loading ?
-              <div className="spinner spinner-border float-right" role="status">
-                <span className="visually-hidden"></span>
-              </div>
-              : ''}
+            {
+              this.state.loading ?
+                <div className="spinner spinner-border float-right" role="status">
+                  <span className="visually-hidden"></span>
+                </div>
+                : ''
+            }
           </div>
           <ul
             className="list-group">
@@ -97,6 +102,7 @@ export default class App extends Component {
         <AnimeInfo
           opened={this.state.infoShown}
           anime={this.state.anime}
+          loading={this.state.infoLoading}
           onAnimeClosed={this.onAnimeClosed.bind(this)}
         />
       </React.Fragment>
@@ -108,7 +114,13 @@ export default class App extends Component {
   //#region Events
 
   onAnimeClicked(anime) {
-    this.setState({ infoShown: true, anime });
+    this.setState({ infoShown: true, infoLoading: true });
+
+    Axios.get(`${this.endPoint}/anime/${anime.id}`)
+      .then(e => {
+        this.setState({ infoShown: true, infoLoading: false, anime: e.data })
+      })
+      .catch(() => this.setState({ infoShown: false, infoLoading: false }));
   }
 
   onAnimeClosed() {
