@@ -4,11 +4,22 @@ import Axios from 'axios'
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
+import AnimeInfo from './components/AnimeInfo/AnimeInfo';
+
 export default class App extends Component {
+
+  //#region Properties
+
   state = {
     animeList: [],
-    list: []
+    list: [],
+    anime: {},
+    infoShown: false
   }
+
+  //#endregion
+
+  //#region Lifecycle
 
   componentDidMount() {
     Axios.get('https://anusic-api.herokuapp.com/api/v1/anime')
@@ -55,12 +66,12 @@ export default class App extends Component {
             className="list-group">
             {
               this.state.list.map((e, i) => (
+                // href={`https://myanimelist.net/anime/${e.id}`}
+                // rel="noreferrer"
                 <a
                   className="list-group-item list-group-item-action"
-                  href={`https://myanimelist.net/anime/${e.id}`}
-                  target="_blank"
-                  rel="noreferrer"
                   key={i}
+                  onClick={() => this.onAnimeClicked(e)}
                 >
                   <span className="name">{e.name}</span>
                   {e.year
@@ -76,7 +87,26 @@ export default class App extends Component {
           </ul>
         </main>
 
+        <AnimeInfo
+          opened={this.state.infoShown}
+          anime={this.state.anime}
+          onAnimeClosed={this.onAnimeClosed.bind(this)}
+        />
       </React.Fragment>
     );
   }
+
+  //#endregion
+
+  //#region Events
+
+  onAnimeClicked(anime) {
+    this.setState({ infoShown: true, anime });
+  }
+
+  onAnimeClosed() {
+    this.setState({ infoShown: false });
+  }
+
+  //#endregion
 }
