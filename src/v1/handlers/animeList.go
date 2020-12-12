@@ -13,8 +13,7 @@ func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Getting the name query
 	qName := r.URL.Query().Get("name")
-	// qYear := r.URL.Query().Get("year")s
-	qYear := uint16(2000)
+	qYear := r.URL.Query().Get("year")
 
 	// Export Anime list
 	animeTitles := []models.AnimeEx{}
