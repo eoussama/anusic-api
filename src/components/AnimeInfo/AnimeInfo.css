@@ -5,3 +5,12 @@
 .modal.open {
 	display: block;
 }
+
+.title {
+	display: flex;
+	align-items: center;
+}
+
+.title .badge {
+	margin-left: 10px;
+}

@@ -14,3 +14,8 @@
 	margin: 0;
 	padding: 0;
 }
+
+.spinner {
+	position: relative;
+	top: -4px;
+}

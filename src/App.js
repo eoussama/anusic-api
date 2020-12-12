@@ -14,7 +14,8 @@ export default class App extends Component {
     animeList: [],
     list: [],
     anime: {},
-    infoShown: false
+    infoShown: false,
+    loading: false
   }
 
   //#endregion
@@ -22,10 +23,12 @@ export default class App extends Component {
   //#region Lifecycle
 
   componentDidMount() {
+    this.setState({ loading: true });
     Axios.get('https://anusic-api.herokuapp.com/api/v1/anime')
       .then(e => {
-        this.setState({ animeList: e.data, list: e.data });
-      });
+        this.setState({ animeList: e.data, list: e.data, loading: false });
+      })
+      .catch(() => this.setState({ loading: false }));
   }
 
   render() {
@@ -61,13 +64,17 @@ export default class App extends Component {
             className="alert alert-dark"
             role="alert">
             <b>{this.state.list.length}</b> Anime fetched!
+
+            {this.state.loading ?
+              <div className="spinner spinner-border float-right" role="status">
+                <span className="visually-hidden"></span>
+              </div>
+              : ''}
           </div>
           <ul
             className="list-group">
             {
               this.state.list.map((e, i) => (
-                // href={`https://myanimelist.net/anime/${e.id}`}
-                // rel="noreferrer"
                 <a
                   className="list-group-item list-group-item-action"
                   key={i}
