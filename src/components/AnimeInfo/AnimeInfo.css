@@ -14,3 +14,11 @@
 .title .badge {
 	margin-left: 10px;
 }
+
+.nav-tabs .nav-item {
+	cursor: pointer;
+}
+
+.tab {
+	padding: 15px 0 0 0;
+}
