@@ -7,6 +7,7 @@ type Theme struct {
 	Name         string
 	ThemeType    uint8
 	Order        uint8
+	Version      uint8
 	Episodes     []string
 	IsNSFW       bool
 	HasSpoilers  bool
@@ -18,6 +19,7 @@ type ThemeEx struct {
 	Name        string     `json:"name"`
 	ThemeType   uint8      `json:"type"`
 	Order       uint8      `json:"order"`
+	Variant     uint8      `json:"version"`
 	Episodes    []string   `json:"episodes"`
 	IsNSFW      bool       `json:"isNSFW"`
 	HasSpoilers bool       `json:"hasSpoilers"`
@@ -37,6 +39,7 @@ func (t Theme) FormatEx() ThemeEx {
 		Name:        t.Name,
 		ThemeType:   t.ThemeType,
 		Order:       t.Order,
+		Variant:     t.Version,
 		Episodes:    t.Episodes,
 		IsNSFW:      t.IsNSFW,
 		HasSpoilers: t.HasSpoilers,

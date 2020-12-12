@@ -80,6 +80,17 @@ func Themes(malID uint16, e *goquery.Selection) {
 						}
 					}
 
+					// Extracting the version
+					reg = regexp.MustCompile(`V(\d+)`)
+					themeVariant := reg.FindStringSubmatch(dump)
+
+					if len(themeVariant) > 1 {
+						variant, _ := strconv.Atoi(themeVariant[1])
+						theme.Version = uint8(variant)
+					} else {
+						theme.Version = 1
+					}
+
 					// Extracting the order
 					reg = regexp.MustCompile(`[0-9]+`)
 					themeOrder := reg.FindStringSubmatch(fragments[0])
