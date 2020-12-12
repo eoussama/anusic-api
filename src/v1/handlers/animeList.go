@@ -11,11 +11,15 @@ import (
 // AnimeListHandler handles the anime list request (/api/v1/anime/)
 func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Scraping anime list
+	// Getting the name query
+	qName := r.URL.Query().Get("name")
+	qYear := r.URL.Query().Get("year")
+
+	// Export Anime list
 	animeTitles := []models.AnimeEx{}
 
 	// Sanitizing the export struct
-	for _, anime := range utils.Cache.Anime {
+	for _, anime := range utils.Cache.FilterAnime(qName, qYear) {
 		animeTitles = append(animeTitles, anime.FormatEx())
 	}
 

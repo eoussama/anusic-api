@@ -2,7 +2,9 @@ package models
 
 import (
 	"os"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 // Anime type
@@ -26,6 +28,49 @@ type AnimeEx struct {
 // GetLink constructs the Anime info link
 func (a Anime) GetLink() string {
 	return os.Getenv("BASE") + strconv.Itoa(int(a.Year)) + "#" + a.ID
+}
+
+// MatchName Checks if string matches any of the ANime title's name
+func (a Anime) MatchName(name string) bool {
+
+	// Trimming the name
+	mName := strings.Trim(name, " ")
+
+	// Returning true if no name was passed
+	if len(name) == 0 {
+		return true
+	}
+
+	// Building the regular expression
+	reg := "(?i).*"
+	for _, frag := range strings.Split(mName, " ") {
+		reg += frag + ".*"
+	}
+	exp := regexp.MustCompile(reg)
+
+	// Iterating over the name and alt names
+	for _, animeName := range append([]string{a.Name}, a.AltNames...) {
+		if exp.MatchString(animeName) {
+			return true
+		}
+	}
+
+	// Returning false if no matches were found
+	return false
+}
+
+// MatchYear Checks if the anime belongs to any of the input years' releases
+func (a Anime) MatchYear(year string) bool {
+
+	for _, y := range strings.Split(year, ",") {
+		sanYear, _ := strconv.Atoi(y)
+
+		if a.Year == uint16(sanYear) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // FormatEx formats the struct

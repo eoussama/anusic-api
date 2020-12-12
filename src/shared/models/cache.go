@@ -62,3 +62,16 @@ func (c Cache) GetCollections(anime Anime) []Collection {
 
 	return retrievedCollections
 }
+
+// FilterAnime filters the Anime list
+func (c Cache) FilterAnime(name string, year string) []Anime {
+	var filteredAnime []Anime
+
+	for _, anime := range c.Anime {
+		if anime.MatchName(name) && anime.MatchYear(year) {
+			filteredAnime = append(filteredAnime, anime)
+		}
+	}
+
+	return filteredAnime
+}
