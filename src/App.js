@@ -99,9 +99,6 @@ export default class App extends Component {
           </ul>
         </main>
 
-        <a href="https://animethemes.moe/video/DotHackRoots-OP1.webm">Link</a>
-        <a target="_blank" href="https://animethemes.moe/video/DotHackRoots-OP1.webm">Link with target</a>
-        <button onClick={() => window.open('https://animethemes.moe/video/DotHackRoots-OP1.webm', '_blank')}>Button</button>
         <AnimeInfo
           opened={this.state.infoShown}
           anime={this.state.anime}

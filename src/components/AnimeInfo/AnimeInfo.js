@@ -45,20 +45,12 @@ export default class AnimeInfo extends Component {
                         >
                           <a target="_blank"
                             href={source.link}>Video</a>
-                          <a target="_blank"
-                            href="https://www.google.com/">Google 1</a>
-                          <a target="_blank"
-                            href={'https://www.google.com/'}>Google 2</a>
-                          <a target="_blank"
-                            href="https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png">Cat 1</a>
-                          <a target="_blank"
-                            href={'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png'}>Cat 2</a>
-                          {/* <audio controls>
+                          <audio controls>
                             <source
                               src={source.link}
                               type="audio/ogg"
                             ></source>
-                          </audio> */}
+                          </audio>
                         </li>
                       ))
                     }
