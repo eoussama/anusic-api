@@ -19,7 +19,7 @@ export default class AnimeInfo extends Component {
     let collections = [];
 
     if (this.props.anime && this.props.anime.collections) {
-      collections = this.props.anime.collections.map((col, index) => (
+      collections = this.props.anime.collections.filter(c => this.collectionHasThemes(c, this.state.mode)).map((col, index) => (
         <div key={index}>
           <h6>{col.name}</h6>
           <ul className="list-group mb-2">
@@ -132,6 +132,15 @@ export default class AnimeInfo extends Component {
 
   onModeToggle(mode) {
     this.setState({ mode })
+  }
+
+  //#endregion
+
+  //#region Methods
+
+  collectionHasThemes(collection, type) {
+    console.log({collection});
+    return collection.themes.some(t => t.type === type);
   }
 
   //#endregion
