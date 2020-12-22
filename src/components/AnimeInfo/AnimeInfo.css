@@ -15,6 +15,14 @@
 	margin-left: 10px;
 }
 
+.nav-tabs {
+	position: sticky;
+	top: -16px;
+
+	background-color: white;
+	z-index: 1;
+}
+
 .nav-tabs .nav-item {
 	cursor: pointer;
 }
