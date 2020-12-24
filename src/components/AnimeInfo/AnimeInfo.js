@@ -82,8 +82,8 @@ export default class AnimeInfo extends Component {
       ));
 
       // Populating the tabs
-      const openingCount = this.state.anime.collections.reduce((acc, c) => acc + c.themes.filter(t => t.type === 0).length, 0);
-      const endingCount = this.state.anime.collections.reduce((acc, c) => acc + c.themes.filter(t => t.type === 1).length, 0);
+      const openingCount = this.state.anime.collections.reduce((acc, c) => acc + this.getThemesCount(c, 0), 0);
+      const endingCount = this.state.anime.collections.reduce((acc, c) => acc + this.getThemesCount(c, 1), 0);
 
       if (this.state.anime.collections.filter(c => this.collectionHasThemes(c, 0)).length > 0) {
         tabs.push(
@@ -180,7 +180,7 @@ export default class AnimeInfo extends Component {
   }
 
   getThemesCount(collection, type) {
-    return collection.themes.filter(t => t.type === type).length;
+    return collection.themes.filter((t, index) => t.type === type && t.version === 1).length;
   }
 
   //#endregion
