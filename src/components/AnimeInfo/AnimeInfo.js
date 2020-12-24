@@ -17,8 +17,11 @@ export default class AnimeInfo extends Component {
   render() {
 
     let collections = [];
+    let tabs = [];
 
     if (this.props.anime && this.props.anime.collections) {
+
+      // Populating the collections
       collections = this.props.anime.collections.filter(c => this.collectionHasThemes(c, this.state.mode)).map((col, index) => (
         <div key={index}>
           <h6>{col.name}</h6>
@@ -61,6 +64,25 @@ export default class AnimeInfo extends Component {
           </ul>
         </div>
       ));
+
+      // Populating the tabs
+      if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 0)).length > 0) {
+        tabs.push(
+          <li className="nav-item">
+            <a className={'nav-link ' + (this.state.mode === 0 ? 'active' : '')}
+              onClick={() => this.onModeToggle(0)}>Openings</a>
+          </li>
+        )
+      }
+
+      if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 1)).length > 0) {
+        tabs.push(
+          <li className="nav-item">
+            <a className={'nav-link ' + (this.state.mode === 1 ? 'active' : '')}
+              onClick={() => this.onModeToggle(1)}>Endings</a>
+          </li>
+        )
+      }
     }
 
     return (
@@ -95,14 +117,7 @@ export default class AnimeInfo extends Component {
 
                   <div className="modal-body">
                     <ul className="nav nav-tabs">
-                      <li className="nav-item">
-                        <a className={'nav-link ' + (this.state.mode === 0 ? 'active' : '')}
-                          onClick={() => this.onModeToggle(0)}>Openings</a>
-                      </li>
-                      <li className="nav-item">
-                        <a className={'nav-link ' + (this.state.mode === 1 ? 'active' : '')}
-                          onClick={() => this.onModeToggle(1)}>Endings</a>
-                      </li>
+                      {tabs}
                     </ul>
 
                     <div className="tab">
@@ -139,7 +154,6 @@ export default class AnimeInfo extends Component {
   //#region Methods
 
   collectionHasThemes(collection, type) {
-    console.log({collection});
     return collection.themes.some(t => t.type === type);
   }
 
