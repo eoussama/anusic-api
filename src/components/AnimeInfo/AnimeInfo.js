@@ -67,6 +67,12 @@ export default class AnimeInfo extends Component {
 
       // Populating the tabs
       if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 0)).length > 0) {
+
+        // Defaulting to the openings tab
+        // if (this.state.mode !== 0) {
+        //   this.setState({ mode: 0 });
+        // }
+
         tabs.push(
           <li className="nav-item">
             <a className={'nav-link ' + (this.state.mode === 0 ? 'active' : '')}
@@ -74,10 +80,11 @@ export default class AnimeInfo extends Component {
           </li>
         )
 
-        // If no openings are found, switch to the endings tab
-      } else if (this.state.mode === 0) {
-        this.setState({ mode: 1 });
       }
+      // If no openings are found, switch to the endings tab
+      //  else if (this.state.mode === 0) {
+      //   this.setState({ mode: 1 });
+      // }
 
       if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 1)).length > 0) {
         tabs.push(
@@ -141,7 +148,7 @@ export default class AnimeInfo extends Component {
               </div>
           }
         </div>
-      </Fragment>
+      </Fragment >
     )
   }
 
