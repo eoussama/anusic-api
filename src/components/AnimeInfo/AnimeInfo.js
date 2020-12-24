@@ -73,6 +73,10 @@ export default class AnimeInfo extends Component {
               onClick={() => this.onModeToggle(0)}>Openings</a>
           </li>
         )
+
+        // If no openings are found, switch to the endings tab
+      } else if (this.state.mode === 0) {
+        this.setState({ mode: 1 });
       }
 
       if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 1)).length > 0) {
