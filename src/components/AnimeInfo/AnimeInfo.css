@@ -1,9 +1,6 @@
 .modal {
-	background-color: #000000ab;
-}
-
-.modal.open {
 	display: block;
+	background-color: #000000ab;
 }
 
 .title {

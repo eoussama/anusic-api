@@ -13,10 +13,9 @@ export default class App extends Component {
   state = {
     animeList: [],
     list: [],
-    anime: {},
+    animeId: -1,
     infoShown: false,
-    loading: false,
-    infoLoading: false
+    loading: false
   }
 
   endPoint = 'https://anusic-api.herokuapp.com/api/v1';
@@ -27,6 +26,7 @@ export default class App extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
+
     Axios.get(`${this.endPoint}/anime`)
       .then(e => {
         this.setState({ animeList: e.data, list: e.data, loading: false });
@@ -35,6 +35,15 @@ export default class App extends Component {
   }
 
   render() {
+    let modal = null;
+
+    if (this.state.infoShown) {
+      modal = <AnimeInfo
+        animeId={this.state.animeId}
+        onAnimeClosed={this.onAnimeClosed.bind(this)}
+      />;
+    }
+
     return (
       <React.Fragment>
         <nav className="navbar sticky-top navbar-light bg-light px-5">
@@ -99,12 +108,7 @@ export default class App extends Component {
           </ul>
         </main>
 
-        <AnimeInfo
-          opened={this.state.infoShown}
-          anime={this.state.anime}
-          loading={this.state.infoLoading}
-          onAnimeClosed={this.onAnimeClosed.bind(this)}
-        />
+        {modal}
       </React.Fragment>
     );
   }
@@ -114,13 +118,7 @@ export default class App extends Component {
   //#region Events
 
   onAnimeClicked(anime) {
-    this.setState({ infoShown: true, infoLoading: true });
-
-    Axios.get(`${this.endPoint}/anime/${anime.id}`)
-      .then(e => {
-        this.setState({ infoShown: true, infoLoading: false, anime: e.data })
-      })
-      .catch(() => this.setState({ infoShown: false, infoLoading: false }));
+    this.setState({ infoShown: true, animeId: anime.id });
   }
 
   onAnimeClosed() {

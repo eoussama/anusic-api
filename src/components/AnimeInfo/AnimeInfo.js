@@ -1,4 +1,5 @@
 import { Component, Fragment } from "react";
+import Axios from 'axios'
 
 import './AnimeInfo.css';
 
@@ -7,22 +8,40 @@ export default class AnimeInfo extends Component {
   //#region Properties
 
   state = {
-    mode: 0
+    mode: 0,
+    anime: {},
+    loading: false
   }
+
+  endPoint = 'https://anusic-api.herokuapp.com/api/v1';
 
   //#endregion
 
   //#region Lifecycle
+
+  componentDidMount() {
+    this.setState({ loading: true });
+
+    Axios.get(`${this.endPoint}/anime/${this.props.animeId}`)
+      .then(e => {
+        this.setState({ loading: false, anime: e.data });
+        console.log(this.state);
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        this.props.onAnimeClosed();
+      });
+  }
 
   render() {
 
     let collections = [];
     let tabs = [];
 
-    if (this.props.anime && this.props.anime.collections) {
+    if (this.state.anime && this.state.anime.collections) {
 
       // Populating the collections
-      collections = this.props.anime.collections.filter(c => this.collectionHasThemes(c, this.state.mode)).map((col, index) => (
+      collections = this.state.anime.collections.filter(c => this.collectionHasThemes(c, this.state.mode)).map((col, index) => (
         <div key={index}>
           <h6>{col.name}</h6>
           <ul className="list-group mb-2">
@@ -66,27 +85,19 @@ export default class AnimeInfo extends Component {
       ));
 
       // Populating the tabs
-      if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 0)).length > 0) {
-
-        // Defaulting to the openings tab
-        // if (this.state.mode !== 0) {
-        //   this.setState({ mode: 0 });
-        // }
-
+      if (this.state.anime.collections.filter(c => this.collectionHasThemes(c, 0)).length > 0) {
         tabs.push(
           <li className="nav-item">
             <a className={'nav-link ' + (this.state.mode === 0 ? 'active' : '')}
               onClick={() => this.onModeToggle(0)}>Openings</a>
           </li>
         )
-
+      } else if (this.state.mode === 0 && !this.state.loading) {
+        // If no openings are found, switch to the endings tab
+        this.setState({ mode: 1 });
       }
-      // If no openings are found, switch to the endings tab
-      //  else if (this.state.mode === 0) {
-      //   this.setState({ mode: 1 });
-      // }
 
-      if (this.props.anime.collections.filter(c => this.collectionHasThemes(c, 1)).length > 0) {
+      if (this.state.anime.collections.filter(c => this.collectionHasThemes(c, 1)).length > 0) {
         tabs.push(
           <li className="nav-item">
             <a className={'nav-link ' + (this.state.mode === 1 ? 'active' : '')}
@@ -98,9 +109,9 @@ export default class AnimeInfo extends Component {
 
     return (
       <Fragment>
-        <div className={'modal ' + (this.props.opened ? 'open' : '')}>
+        <div className="modal">
           {
-            this.props.loading ?
+            this.state.loading ?
               <div className="spinner spinner-border text-light float-right" role="status">
                 <span className="visually-hidden"></span>
               </div> :
@@ -109,12 +120,12 @@ export default class AnimeInfo extends Component {
                   <div className="modal-header">
                     <h5 className="modal-title">
                       <div className="title">
-                        {this.props.anime.name}
-                        {this.props.anime.year
-                          ? <span className="badge badge-secondary float-right">{this.props.anime.year}</span>
+                        {this.state.anime.name}
+                        {this.state.anime.year
+                          ? <span className="badge badge-secondary float-right">{this.state.anime.year}</span>
                           : ''}
                       </div>
-                      <p className="alt">{this.props.anime.altNames ? this.props.anime.altNames.join(",") : ''}</p>
+                      <p className="alt">{this.state.anime.altNames ? this.state.anime.altNames.join(",") : ''}</p>
                     </h5>
                     <button
                       type="button"
@@ -141,7 +152,7 @@ export default class AnimeInfo extends Component {
                       type="button"
                       className="btn btn-primary"
                       target="_blank"
-                      href={`https://myanimelist.net/anime/${this.props.anime.id}`}
+                      href={`https://myanimelist.net/anime/${this.state.anime.id}`}
                     >Visit MAL Page</a>
                   </div>
                 </div>
