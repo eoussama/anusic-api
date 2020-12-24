@@ -39,6 +39,7 @@ export default class App extends Component {
 
     if (this.state.infoShown) {
       modal = <AnimeInfo
+        endPoint={this.endPoint}
         animeId={this.state.animeId}
         onAnimeClosed={this.onAnimeClosed.bind(this)}
       />;

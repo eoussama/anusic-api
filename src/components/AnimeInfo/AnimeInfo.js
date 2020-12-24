@@ -13,8 +13,6 @@ export default class AnimeInfo extends Component {
     loading: false
   }
 
-  endPoint = 'https://anusic-api.herokuapp.com/api/v1';
-
   //#endregion
 
   //#region Lifecycle
@@ -22,10 +20,9 @@ export default class AnimeInfo extends Component {
   componentDidMount() {
     this.setState({ loading: true });
 
-    Axios.get(`${this.endPoint}/anime/${this.props.animeId}`)
+    Axios.get(`${this.props.endPoint}/anime/${this.props.animeId}`)
       .then(e => {
         this.setState({ loading: false, anime: e.data });
-        console.log(this.state);
       })
       .catch(() => {
         this.setState({ loading: false });
@@ -85,11 +82,14 @@ export default class AnimeInfo extends Component {
       ));
 
       // Populating the tabs
+      const openingCount = this.state.anime.collections.reduce((acc, c) => acc + c.themes.filter(t => t.type === 0).length, 0);
+      const endingCount = this.state.anime.collections.reduce((acc, c) => acc + c.themes.filter(t => t.type === 1).length, 0);
+
       if (this.state.anime.collections.filter(c => this.collectionHasThemes(c, 0)).length > 0) {
         tabs.push(
           <li className="nav-item">
             <a className={'nav-link ' + (this.state.mode === 0 ? 'active' : '')}
-              onClick={() => this.onModeToggle(0)}>Openings</a>
+              onClick={() => this.onModeToggle(0)}><span class="badge badge-secondary">{openingCount}</span> Opening(s)</a>
           </li>
         )
       } else if (this.state.mode === 0 && !this.state.loading) {
@@ -101,7 +101,7 @@ export default class AnimeInfo extends Component {
         tabs.push(
           <li className="nav-item">
             <a className={'nav-link ' + (this.state.mode === 1 ? 'active' : '')}
-              onClick={() => this.onModeToggle(1)}>Endings</a>
+              onClick={() => this.onModeToggle(1)}><span class="badge badge-secondary">{endingCount}</span> Ending(s)</a>
           </li>
         )
       }
