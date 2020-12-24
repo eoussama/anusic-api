@@ -17,7 +17,7 @@
 	top: -16px;
 
 	background-color: white;
-	z-index: 2;
+	z-index: 1;
 }
 
 .nav-tabs .nav-item {
@@ -29,13 +29,15 @@
 }
 
 .tab h6 {
-	position: sticky;
-	top: 26px;
+	display: inline;
+}
 
-	background-color: white;
-	padding-bottom: 10px;
+summary {
+	margin-bottom: 10px;
+}
 
-	z-index: 1;
+summary:focus {
+	outline: none;
 }
 
 .modal .spinner {

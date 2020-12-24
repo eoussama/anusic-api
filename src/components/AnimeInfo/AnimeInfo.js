@@ -39,8 +39,11 @@ export default class AnimeInfo extends Component {
 
       // Populating the collections
       collections = this.state.anime.collections.filter(c => this.collectionHasThemes(c, this.state.mode)).map((col, index) => (
-        <div key={index}>
-          <h6><span class="badge badge-light">{this.getThemesCount(col, this.state.mode)}</span> {col.name}</h6>
+        <details key={index}>
+          <summary>
+            <h6><span class="badge badge-light">{this.getThemesCount(col, this.state.mode)}</span> {col.name}</h6>
+          </summary>
+
           <ul className="list-group mb-2">
             {
               col.themes.filter(theme => theme.type === this.state.mode).map((theme, idx) => (
@@ -78,7 +81,7 @@ export default class AnimeInfo extends Component {
               ))
             }
           </ul>
-        </div>
+        </details>
       ));
 
       // Populating the tabs
