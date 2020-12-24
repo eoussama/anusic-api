@@ -39,7 +39,7 @@ export default class AnimeInfo extends Component {
 
       // Populating the collections
       collections = this.state.anime.collections.filter(c => this.collectionHasThemes(c, this.state.mode)).map((col, index) => (
-        <details key={index}>
+        <details key={index + (100 * (this.state.mode + 1))} open={index === 0}>
           <summary>
             <h6><span class="badge badge-light">{this.getThemesCount(col, this.state.mode)}</span> {col.name}</h6>
           </summary>
@@ -49,7 +49,7 @@ export default class AnimeInfo extends Component {
               col.themes.filter(theme => theme.type === this.state.mode).map((theme, idx) => (
                 <li
                   className="list-group-item"
-                  key={idx}>
+                  key={idx + (200 * (this.state.mode + 1))}>
                   <div>
                     <span className="badge badge-primary mr-1">{this.state.mode === 0 ? 'OP' : 'ED'} {theme.order}</span>
                     <span className="badge badge-secondary mr-1">V{theme.version}</span>
@@ -63,7 +63,7 @@ export default class AnimeInfo extends Component {
                       theme.sources.map((source, i) => (
                         <li
                           className="list-group-item list-group-item-source"
-                          key={i}
+                          key={i + (300 * (this.state.mode + 1))}
                         >
                           <a target="_blank"
                             href={source.link}>Video</a>
