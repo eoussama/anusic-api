@@ -46,8 +46,12 @@ summary:focus {
 	top: 50%;
 }
 
-.list-group-item-source {
+.modal-footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.modal-footer a {
+	margin-left: auto;
 }

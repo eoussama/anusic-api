@@ -10,6 +10,7 @@ export default class AnimeInfo extends Component {
   state = {
     mode: 0,
     anime: {},
+    targetTheme: null,
     loading: false
   }
 
@@ -34,6 +35,7 @@ export default class AnimeInfo extends Component {
 
     let collections = [];
     let tabs = [];
+    let player = null;
 
     if (this.state.anime && this.state.anime.collections) {
 
@@ -62,17 +64,13 @@ export default class AnimeInfo extends Component {
                     {
                       theme.sources.map((source, i) => (
                         <li
-                          className="list-group-item list-group-item-source"
+                          className="list-group-item"
                           key={i + (300 * (this.state.mode + 1))}
                         >
+                          <a href="#" onClick={() => this.playTheme(source.link)}>Play audio</a>
                           <a target="_blank"
-                            href={source.link}>Video</a>
-                          <audio controls>
-                            <source
-                              src={source.link}
-                              type="audio/ogg"
-                            ></source>
-                          </audio>
+                            class="ml-4"
+                            href={source.link}>Open video</a>
                         </li>
                       ))
                     }
@@ -108,6 +106,18 @@ export default class AnimeInfo extends Component {
           </li>
         )
       }
+    }
+
+    if (this.state.targetTheme) {
+      player = (
+        <audio controls
+          id="player">
+          <source
+            src={this.state.targetTheme}
+            type="audio/ogg"
+          ></source>
+        </audio>
+      )
     }
 
     return (
@@ -151,6 +161,7 @@ export default class AnimeInfo extends Component {
                   </div>
 
                   <div className="modal-footer">
+                    {player}
                     <a
                       type="button"
                       className="btn btn-primary"
@@ -170,6 +181,10 @@ export default class AnimeInfo extends Component {
 
   //#region Events
 
+  /**
+   * Toggles the tab mode
+   * @param {number} mode The selected theme type (0 opening / 1 ending)
+   */
   onModeToggle(mode) {
     this.setState({ mode })
   }
@@ -178,12 +193,37 @@ export default class AnimeInfo extends Component {
 
   //#region Methods
 
+  /**
+   * Checks whether a collection has themes
+   *
+   * @param {object} collection The collection that contains the themes
+   * @param {number} type The type of the theme (0 opening / 1 ending)
+   */
   collectionHasThemes(collection, type) {
     return collection.themes.some(t => t.type === type);
   }
 
+  /**
+   * Gets the number of themes of a given type that belong to a collection
+   *
+   * @param {object} collection The collection that contains the themes
+   * @param {number} type The type of the theme (0 opening / 1 ending)
+   */
   getThemesCount(collection, type) {
-    return collection.themes.filter((t, index) => t.type === type && t.version === 1).length;
+    return collection.themes.filter(t => t.type === type && t.version === 1).length;
+  }
+
+  /**
+   * Plays the clicked theme
+   * @param {string} source The source of the theme (URL)
+   */
+  playTheme(source) {
+    this.setState({ targetTheme: source });
+
+    setTimeout(() => {
+      document.getElementById('player').load();
+      document.getElementById('player').play();
+    }, 0);
   }
 
   //#endregion

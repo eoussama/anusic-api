@@ -118,10 +118,17 @@ export default class App extends Component {
 
   //#region Events
 
+  /**
+   * Opens the modal
+   * @param {object} anime The anime to open
+   */
   onAnimeClicked(anime) {
     this.setState({ infoShown: true, animeId: anime.id });
   }
 
+  /**
+   * Closes the modal
+   */
   onAnimeClosed() {
     this.setState({ infoShown: false });
   }
