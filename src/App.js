@@ -28,8 +28,12 @@ export default class App extends Component {
     this.setState({ loading: true });
 
     Axios.get(`${this.endPoint}/anime`)
-      .then(e => {
-        this.setState({ animeList: e.data, list: e.data, loading: false });
+      .then(({ data }) => {
+        this.setState({ loading: false });
+
+        if (!data.hasError) {
+          this.setState({ animeList: data.data, list: data.data });
+        }
       })
       .catch(() => this.setState({ loading: false }));
   }

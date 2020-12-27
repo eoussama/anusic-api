@@ -22,8 +22,12 @@ export default class AnimeInfo extends Component {
     this.setState({ loading: true });
 
     Axios.get(`${this.props.endPoint}/anime/${this.props.animeId}`)
-      .then(e => {
-        this.setState({ loading: false, anime: e.data });
+      .then(({ data }) => {
+        this.setState({ loading: false });
+
+        if (!data.hasError) {
+          this.setState({ anime: data.data });
+        }
       })
       .catch(() => {
         this.setState({ loading: false });
