@@ -25,7 +25,7 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(
 			struct {
 				models.Response
-				Data models.AnimeEx `json:"data"`
+				models.AnimeEx `json:"data"`
 			}{
 				models.Response{},
 				utils.FormatAnime(*anime),
@@ -34,7 +34,7 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(models.Response{
 			HasError: true,
-			Error:    &models.Error{},
+			Error:    models.Error.AnimeNotFound(models.Error{}, id),
 		})
 	}
 }
