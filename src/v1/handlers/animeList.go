@@ -24,5 +24,13 @@ func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Encoding the return value
-	json.NewEncoder(w).Encode(animeTitles)
+	json.NewEncoder(w).Encode(
+		struct {
+			models.Response
+			Data []models.AnimeEx `json:"data"`
+		}{
+			models.Response{},
+			animeTitles,
+		},
+	)
 }
