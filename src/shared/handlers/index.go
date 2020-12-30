@@ -9,5 +9,5 @@ import (
 
 // IndexHandler handles the entry request (/)
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ReturnResponse(w, config.Info)
+	utils.ReturnResponse(w, config.Info, nil)
 }

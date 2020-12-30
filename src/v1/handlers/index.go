@@ -9,11 +9,11 @@ import (
 
 // IndexHandler handles the entry request (/api/v1/)
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ReturnResponse(w, struct {
+	info := struct {
 		config.Meta
-		Version uint8
-	}{
-		config.Info,
-		uint8(1),
-	})
+		Version uint8 `json:"version"`
+	}{config.Info, uint8(1)}
+
+	// Returning the response value
+	utils.ReturnResponse(w, info, nil)
 }
