@@ -2,9 +2,9 @@ package config
 
 // Meta represents the structure of the inf object of the API
 type Meta struct {
-	Name       string `json:"name"`
-	Author     string `json:"author"`
-	Repository string `json:"repository"`
+	Name       string
+	Author     string
+	Repository string
 }
 
 // Info information about the API

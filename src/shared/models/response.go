@@ -2,6 +2,7 @@ package models
 
 // Response type
 type Response struct {
-	HasError bool   `json:"hasError"`
-	Error    *Error `json:"error,omitempty"`
+	HasError bool
+	Error    *Error
+	Data     interface{}
 }

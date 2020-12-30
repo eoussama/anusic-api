@@ -32,9 +32,9 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 			},
 		)
 	} else {
-		json.NewEncoder(w).Encode(models.Response{
-			HasError: true,
-			Error:    models.Error.AnimeNotFound(models.Error{}, id),
-		})
+		// json.NewEncoder(w).Encode(models.Response{
+		// 	HasError: true,
+		// 	Error:    models.Error.AnimeNotFound(models.Error{}, id),
+		// })
 	}
 }
