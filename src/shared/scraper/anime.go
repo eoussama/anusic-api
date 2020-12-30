@@ -137,6 +137,7 @@ func AnimeInfo() {
 	// Waiting for the scraping to resolve
 	collector.Wait()
 
+	// Logging the fetched status
 	utils.Log(fmt.Sprintf("Fetched %d Anime info in %v", count, time.Since(start)), enums.LogInfo)
 
 	// Raising a warning if the fetched info does not match the total Anime titles
