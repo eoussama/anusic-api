@@ -28,4 +28,8 @@ func Init(r *mux.Router) {
 	// Logs
 	v1Route.HandleFunc("/logs", log.Logs).Methods("GET")
 	v1Route.HandleFunc("/logs/", log.Logs).Methods("GET")
+
+	// Log by ID
+	v1Route.HandleFunc("/logs/{id}", log.Log).Methods("GET")
+	v1Route.HandleFunc("/logs/{id}/", log.Log).Methods("GET")
 }
