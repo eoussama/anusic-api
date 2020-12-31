@@ -68,7 +68,7 @@ func AnimeInfo() {
 
 	// Initializing the scraper
 	collector := colly.NewCollector(colly.Async(async))
-	collector.SetRequestTimeout(30 * time.Second)
+	collector.SetRequestTimeout(60 * time.Second)
 
 	if async {
 		collector.Limit(&colly.LimitRule{
@@ -127,9 +127,11 @@ func AnimeInfo() {
 		}
 	})
 
+	// Fallback on error
 	collector.OnError(func(r *colly.Response, e error) {
-		fmt.Println("Revisiting", r.Request.URL.String())
-		collector.Visit(r.Request.URL.String())
+		fmt.Println(e)
+		// utils.Log(fmt.Sprintf("Re-requesting %s", r.Request.URL.String()), enums.LogInfo)
+		// collector.Visit(r.Request.URL.String())
 	})
 
 	for _, year := range years {
@@ -137,8 +139,14 @@ func AnimeInfo() {
 		// Constructing the year index page
 		url := os.Getenv("BASE") + year
 
+		// Logging the request
+		utils.Log(fmt.Sprintf("Requesting %s", url), enums.LogInfo)
+
 		// Visiting the target page and invoking the scraper
 		collector.Visit(url)
+
+		// Sleeping for 1 second to avoid timing-out
+		time.Sleep(1 * time.Second)
 	}
 
 	// Waiting for the scraping to resolve
