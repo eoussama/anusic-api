@@ -5,11 +5,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
+	"time"
 )
 
 // Logging dump location
 var logDirectory = "logs"
-var logFile = "anusic-api.log"
 
 // InfoLogger hosts the logger that logs info
 var InfoLogger *log.Logger
@@ -22,6 +23,10 @@ var ErrorLogger *log.Logger
 
 // init initializes the logger
 func init() {
+
+	// Constructing the log file name
+	timestamp := time.Now().Unix()
+	logFile := strconv.Itoa(int(timestamp)) + ".log"
 
 	// Constructing the logs path
 	absPath, _ := filepath.Abs(".")
