@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/eoussama/anusic-api/src/shared/enums"
 	hdlr "github.com/eoussama/anusic-api/src/shared/handlers"
@@ -20,8 +21,11 @@ func main() {
 	// Loading environment variables
 	utils.LoadEnvVars()
 
+	// Checking if force scraping is enabled
+	forceParse, _ := strconv.ParseBool(os.Getenv("FORCE_SCRAP"))
+
 	// Loading cache data if available
-	if !utils.LoadCache() {
+	if !utils.LoadCache() || forceParse {
 
 		// Scraping if no data cached
 		scraper.Scrap()
@@ -34,6 +38,7 @@ func main() {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 
+	// Invoking the content type middleware
 	apiRouter.Use(middlewares.ContentType)
 
 	apiRouter.HandleFunc("/", hdlr.IndexHandler).Methods("GET")

@@ -2,7 +2,6 @@ package scraper
 
 import (
 	"fmt"
-	"os"
 	"path"
 	"regexp"
 	"strconv"
@@ -22,7 +21,7 @@ func AnimeList() {
 	start := time.Now()
 
 	// Initializing the scraper
-	collector := colly.NewCollector(colly.Async(false))
+	collector := colly.NewCollector(colly.Async(true))
 
 	// Initializing the anime list
 	animeTitles := []models.Anime{}
@@ -50,7 +49,7 @@ func AnimeList() {
 	})
 
 	// Visiting the target page and invoking the scraper
-	collector.Visit(os.Getenv("BASE") + "anime_index")
+	collector.Visit(BASE_ANIME + "anime_index")
 	collector.Wait()
 
 	utils.Cache.Anime = animeTitles
@@ -62,16 +61,18 @@ func AnimeInfo() {
 	utils.Log("Scraping Anime Info...", enums.LogInfo)
 
 	start := time.Now()
+	async := true
 	count := 0
-	async := false
+	years := genYears()
 
 	// Initializing the scraper
 	collector := colly.NewCollector(colly.Async(async))
+	collector.SetRequestTimeout(60 * time.Second)
 
 	if async {
 		collector.Limit(&colly.LimitRule{
 			DomainGlob:  "*",
-			Parallelism: len(utils.Cache.Anime),
+			Parallelism: len(years),
 		})
 	}
 
@@ -121,22 +122,35 @@ func AnimeInfo() {
 
 			count++
 		} else {
-			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
+			utils.Log(fmt.Sprintf("Anime “%s” not found year = %s", targetID, year), enums.LogWarning)
 		}
 	})
 
-	for _, year := range genYears() {
+	// Fallback on error
+	collector.OnError(func(r *colly.Response, e error) {
+		utils.Log(fmt.Sprintf("Re-requesting %s", r.Request.URL.String()), enums.LogInfo)
+		collector.Visit(r.Request.URL.String())
+	})
+
+	for _, year := range years {
 
 		// Constructing the year index page
-		url := os.Getenv("BASE") + year
+		url := BASE_ANIME + year
+
+		// Logging the request
+		utils.Log(fmt.Sprintf("Requesting %s", url), enums.LogInfo)
 
 		// Visiting the target page and invoking the scraper
 		collector.Visit(url)
+
+		// Sleeping for 1 second to avoid timing-out
+		time.Sleep(1 * time.Second)
 	}
 
 	// Waiting for the scraping to resolve
 	collector.Wait()
 
+	// Logging the fetched status
 	utils.Log(fmt.Sprintf("Fetched %d Anime info in %v", count, time.Since(start)), enums.LogInfo)
 
 	// Raising a warning if the fetched info does not match the total Anime titles

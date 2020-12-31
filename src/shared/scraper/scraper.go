@@ -9,6 +9,9 @@ import (
 	"github.com/eoussama/anusic-api/src/shared/utils"
 )
 
+// BASE_ANIME is the endpoint from where the scraper fetches the data
+var BASE_ANIME string = "https://www.reddit.com/r/AnimeThemes/wiki/"
+
 // Scrap scraps all data
 func Scrap() {
 	AnimeList()

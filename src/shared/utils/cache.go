@@ -24,7 +24,10 @@ func LoadCache() bool {
 	// Constructing the cache file
 	absPath, _ := filepath.Abs(".")
 	path := filepath.Join(absPath, "data", "cache.json")
+
+	// Opening the json file
 	jsonFile, err := os.Open(path)
+	defer jsonFile.Close()
 
 	// No cache found
 	if err != nil {
@@ -35,7 +38,6 @@ func LoadCache() bool {
 	json.Unmarshal(byteValue, &Cache)
 
 	// Clearing resources
-	defer jsonFile.Close()
 	return true
 }
 

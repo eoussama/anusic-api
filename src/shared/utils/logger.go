@@ -5,11 +5,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
+	"time"
 )
 
-// Logging dump location
-var logDirectory = "logs"
-var logFile = "anusic-api.log"
+// LogDirectory is the name of the Logging dump location
+var LogDirectory = "logs"
 
 // InfoLogger hosts the logger that logs info
 var InfoLogger *log.Logger
@@ -20,12 +21,19 @@ var WarningLogger *log.Logger
 // ErrorLogger hosts the logger that logs errors
 var ErrorLogger *log.Logger
 
+// RequestLogger hosts the logger that logs requests
+var RequestLogger *log.Logger
+
 // init initializes the logger
 func init() {
 
-	// Constructing the logs path
+	// Constructing the log file name
+	timestamp := time.Now().Unix()
+	logFile := strconv.Itoa(int(timestamp)) + ".log"
+
+	// Constructing the logs file path
 	absPath, _ := filepath.Abs(".")
-	directoryPath := filepath.Join(absPath, logDirectory)
+	directoryPath := filepath.Join(absPath, LogDirectory)
 	filePath := filepath.Join(directoryPath, logFile)
 
 	// Ensuring the logs directory
@@ -38,11 +46,13 @@ func init() {
 	InfoLogger = log.New(file, "[INFO] ", log.Ldate|log.Ltime)
 	WarningLogger = log.New(file, "[WARNING] ", log.Ldate|log.Ltime)
 	ErrorLogger = log.New(file, "[ERROR] ", log.Ldate|log.Ltime)
+	RequestLogger = log.New(file, "[REQUEST] ", log.Ldate|log.Ltime)
 
 	// Setting both the console and the logging file as output targets
 	InfoLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 	WarningLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 	ErrorLogger.SetOutput(io.MultiWriter(os.Stdout, file))
+	RequestLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 }
 
 // Log handles logging
@@ -52,6 +62,8 @@ func Log(input interface{}, logType int) {
 		WarningLogger.Println(input)
 	case 2:
 		ErrorLogger.Println(input)
+	case 3:
+		RequestLogger.Println(input)
 	default:
 		InfoLogger.Println(input)
 	}

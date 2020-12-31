@@ -5,4 +5,5 @@ const (
 	LogInfo    = iota
 	LogWarning = iota
 	LogError   = iota
+	LogRequest = iota
 )

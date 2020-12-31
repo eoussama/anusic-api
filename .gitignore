@@ -1,5 +1,5 @@
 # Environment files
-# src/config/.env
+config/.env
 
 # Binaries for programs and plugins
 *.exe
