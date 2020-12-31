@@ -1,7 +1,6 @@
 package models
 
 import (
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,11 +22,6 @@ type AnimeEx struct {
 	AltNames    []string       `json:"altNames,omitempty"`
 	Year        uint16         `json:"year"`
 	Collections []CollectionEx `json:"collections,omitempty"`
-}
-
-// GetLink constructs the Anime info link
-func (a Anime) GetLink() string {
-	return os.Getenv("BASE") + strconv.Itoa(int(a.Year)) + "#" + a.ID
 }
 
 // MatchName Checks if string matches any of the ANime title's name

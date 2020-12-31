@@ -2,7 +2,6 @@ package scraper
 
 import (
 	"fmt"
-	"os"
 	"path"
 	"regexp"
 	"strconv"
@@ -50,7 +49,7 @@ func AnimeList() {
 	})
 
 	// Visiting the target page and invoking the scraper
-	collector.Visit(os.Getenv("BASE") + "anime_index")
+	collector.Visit(BASE_ANIME + "anime_index")
 	collector.Wait()
 
 	utils.Cache.Anime = animeTitles
@@ -129,15 +128,14 @@ func AnimeInfo() {
 
 	// Fallback on error
 	collector.OnError(func(r *colly.Response, e error) {
-		fmt.Println(e)
-		// utils.Log(fmt.Sprintf("Re-requesting %s", r.Request.URL.String()), enums.LogInfo)
-		// collector.Visit(r.Request.URL.String())
+		utils.Log(fmt.Sprintf("Re-requesting %s", r.Request.URL.String()), enums.LogInfo)
+		collector.Visit(r.Request.URL.String())
 	})
 
 	for _, year := range years {
 
 		// Constructing the year index page
-		url := os.Getenv("BASE") + year
+		url := BASE_ANIME + year
 
 		// Logging the request
 		utils.Log(fmt.Sprintf("Requesting %s", url), enums.LogInfo)
