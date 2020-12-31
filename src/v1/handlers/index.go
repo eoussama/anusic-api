@@ -15,5 +15,5 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}{config.Info, uint8(1)}
 
 	// Returning the response value
-	utils.ReturnResponse(w, info, nil)
+	utils.ReturnResponse(w, r, info, nil)
 }

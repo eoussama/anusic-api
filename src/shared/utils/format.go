@@ -2,8 +2,10 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/eoussama/anusic-api/src/shared/enums"
 	"github.com/eoussama/anusic-api/src/shared/models"
 )
 
@@ -42,7 +44,12 @@ func FormatAnime(anime models.Anime) models.AnimeEx {
 }
 
 // ReturnResponse returns the response object
-func ReturnResponse(w http.ResponseWriter, data interface{}, err *models.Error) {
+func ReturnResponse(w http.ResponseWriter, r *http.Request, data interface{}, err *models.Error) {
+
+	// Logging the request
+	Log(fmt.Sprintf("Path(%s), Queries(%s)", r.URL.Path, r.URL.RawQuery), enums.LogRequest)
+
+	// Returning the marshalled data
 	json.NewEncoder(w).Encode(models.Response{
 		HasError: err != nil,
 		Error:    err,

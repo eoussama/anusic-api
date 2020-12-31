@@ -23,5 +23,5 @@ func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Returning the response
-	utils.ReturnResponse(w, animeTitles, nil)
+	utils.ReturnResponse(w, r, animeTitles, nil)
 }

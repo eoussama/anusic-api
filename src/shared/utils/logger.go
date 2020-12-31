@@ -21,6 +21,9 @@ var WarningLogger *log.Logger
 // ErrorLogger hosts the logger that logs errors
 var ErrorLogger *log.Logger
 
+// RequestLogger hosts the logger that logs requests
+var RequestLogger *log.Logger
+
 // init initializes the logger
 func init() {
 
@@ -43,11 +46,13 @@ func init() {
 	InfoLogger = log.New(file, "[INFO] ", log.Ldate|log.Ltime)
 	WarningLogger = log.New(file, "[WARNING] ", log.Ldate|log.Ltime)
 	ErrorLogger = log.New(file, "[ERROR] ", log.Ldate|log.Ltime)
+	RequestLogger = log.New(file, "[REQUEST] ", log.Ldate|log.Ltime)
 
 	// Setting both the console and the logging file as output targets
 	InfoLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 	WarningLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 	ErrorLogger.SetOutput(io.MultiWriter(os.Stdout, file))
+	RequestLogger.SetOutput(io.MultiWriter(os.Stdout, file))
 }
 
 // Log handles logging
@@ -57,6 +62,8 @@ func Log(input interface{}, logType int) {
 		WarningLogger.Println(input)
 	case 2:
 		ErrorLogger.Println(input)
+	case 3:
+		RequestLogger.Println(input)
 	default:
 		InfoLogger.Println(input)
 	}
