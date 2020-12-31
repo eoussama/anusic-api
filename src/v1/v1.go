@@ -17,19 +17,9 @@ func Init(r *mux.Router) {
 	v1Route.HandleFunc("/", hdlr.IndexHandler).Methods("GET")
 	v1Route.HandleFunc("", hdlr.IndexHandler).Methods("GET")
 
-	// Anime list
-	v1Route.HandleFunc("/anime", anime.AnimeListHandler).Methods("GET")
-	v1Route.HandleFunc("/anime/", anime.AnimeListHandler).Methods("GET")
+	// Anime routing
+	anime.Init(v1Route.PathPrefix("/anime").Subrouter())
 
-	// Anime by ID
-	v1Route.HandleFunc("/anime/{id:[0-9]+}", anime.AnimeHandler).Methods("GET")
-	v1Route.HandleFunc("/anime/{id:[0-9]+}/", anime.AnimeHandler).Methods("GET")
-
-	// Logs
-	v1Route.HandleFunc("/logs", log.Logs).Methods("GET")
-	v1Route.HandleFunc("/logs/", log.Logs).Methods("GET")
-
-	// Log by ID
-	v1Route.HandleFunc("/logs/{id}", log.Log).Methods("GET")
-	v1Route.HandleFunc("/logs/{id}/", log.Log).Methods("GET")
+	// Logs routing
+	log.Init(v1Route.PathPrefix("/logs").Subrouter())
 }
