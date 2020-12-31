@@ -22,8 +22,8 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 	// Returning the response value
 	if anime == nil {
 		w.WriteHeader(http.StatusNotFound)
-		utils.ReturnResponse(w, r, nil, models.Error.AnimeNotFound(models.Error{}, id))
+		utils.ReturnResponse(w, r, nil, models.Error.AnimeNotFound(models.Error{}, id), http.StatusNotFound)
 	} else {
-		utils.ReturnResponse(w, r, utils.FormatAnime(*anime), nil)
+		utils.ReturnResponse(w, r, utils.FormatAnime(*anime), nil, http.StatusOK)
 	}
 }

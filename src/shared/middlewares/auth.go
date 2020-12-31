@@ -3,6 +3,9 @@ package middlewares
 import (
 	"net/http"
 	"os"
+
+	"github.com/eoussama/anusic-api/src/shared/models"
+	"github.com/eoussama/anusic-api/src/shared/utils"
 )
 
 // Auth checks if the correct access token was passed before resuming the request
@@ -16,7 +19,7 @@ func Auth(next http.Handler) http.Handler {
 		if token == os.Getenv("SECRET") {
 			next.ServeHTTP(w, r)
 		} else {
-			w.WriteHeader(http.StatusUnauthorized)
+			utils.ReturnResponse(w, r, nil, models.Error.InvalidAccessToken(models.Error{}), http.StatusUnauthorized)
 		}
 	})
 }

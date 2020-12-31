@@ -44,13 +44,17 @@ func FormatAnime(anime models.Anime) models.AnimeEx {
 }
 
 // ReturnResponse returns the response object
-func ReturnResponse(w http.ResponseWriter, r *http.Request, data interface{}, err *models.Error) {
+func ReturnResponse(w http.ResponseWriter, r *http.Request, data interface{}, err *models.Error, status int) {
 
 	// Logging the request
 	Log(fmt.Sprintf("Path(%s), Queries(%s)", r.URL.Path, r.URL.RawQuery), enums.LogRequest)
 
+	// Header
+	w.WriteHeader(status)
+
 	// Returning the marshalled data
 	json.NewEncoder(w).Encode(models.Response{
+		Status:   status,
 		HasError: err != nil,
 		Error:    err,
 		Data:     data,
