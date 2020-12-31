@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"github.com/eoussama/anusic-api/src/shared/models"
 )
 
@@ -36,4 +39,13 @@ func FormatAnime(anime models.Anime) models.AnimeEx {
 	}
 
 	return formatedAnime
+}
+
+// ReturnResponse returns the response object
+func ReturnResponse(w http.ResponseWriter, data interface{}, err *models.Error) {
+	json.NewEncoder(w).Encode(models.Response{
+		HasError: err != nil,
+		Error:    err,
+		Data:     data,
+	})
 }

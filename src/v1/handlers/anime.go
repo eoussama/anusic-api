@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -20,21 +19,10 @@ func AnimeHandler(w http.ResponseWriter, r *http.Request) {
 	// Getting the respective anime
 	anime := utils.Cache.GetAnimeByMALID(id)
 
-	// Encoding the return value
-	if anime != nil {
-		json.NewEncoder(w).Encode(
-			struct {
-				models.Response
-				models.AnimeEx `json:"data"`
-			}{
-				models.Response{},
-				utils.FormatAnime(*anime),
-			},
-		)
+	// Returning the response value
+	if anime == nil {
+		utils.ReturnResponse(w, nil, models.Error.AnimeNotFound(models.Error{}, id))
 	} else {
-		json.NewEncoder(w).Encode(models.Response{
-			HasError: true,
-			Error:    models.Error.AnimeNotFound(models.Error{}, id),
-		})
+		utils.ReturnResponse(w, utils.FormatAnime(*anime), nil)
 	}
 }

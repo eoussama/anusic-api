@@ -22,7 +22,7 @@ func AnimeList() {
 	start := time.Now()
 
 	// Initializing the scraper
-	collector := colly.NewCollector(colly.Async(false))
+	collector := colly.NewCollector(colly.Async(true))
 
 	// Initializing the anime list
 	animeTitles := []models.Anime{}
@@ -62,16 +62,18 @@ func AnimeInfo() {
 	utils.Log("Scraping Anime Info...", enums.LogInfo)
 
 	start := time.Now()
+	async := true
 	count := 0
-	async := false
+	years := genYears()
 
 	// Initializing the scraper
 	collector := colly.NewCollector(colly.Async(async))
+	collector.SetRequestTimeout(30 * time.Second)
 
 	if async {
 		collector.Limit(&colly.LimitRule{
 			DomainGlob:  "*",
-			Parallelism: len(utils.Cache.Anime),
+			Parallelism: len(years),
 		})
 	}
 
@@ -121,11 +123,16 @@ func AnimeInfo() {
 
 			count++
 		} else {
-			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
+			utils.Log(fmt.Sprintf("Anime “%s” not found year = %s", targetID, year), enums.LogWarning)
 		}
 	})
 
-	for _, year := range genYears() {
+	collector.OnError(func(r *colly.Response, e error) {
+		fmt.Println("Revisiting", r.Request.URL.String())
+		collector.Visit(r.Request.URL.String())
+	})
+
+	for _, year := range years {
 
 		// Constructing the year index page
 		url := os.Getenv("BASE") + year
@@ -137,6 +144,7 @@ func AnimeInfo() {
 	// Waiting for the scraping to resolve
 	collector.Wait()
 
+	// Logging the fetched status
 	utils.Log(fmt.Sprintf("Fetched %d Anime info in %v", count, time.Since(start)), enums.LogInfo)
 
 	// Raising a warning if the fetched info does not match the total Anime titles

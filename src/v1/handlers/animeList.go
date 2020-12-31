@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/eoussama/anusic-api/src/shared/models"
@@ -23,14 +22,6 @@ func AnimeListHandler(w http.ResponseWriter, r *http.Request) {
 		animeTitles = append(animeTitles, anime.FormatEx())
 	}
 
-	// Encoding the return value
-	json.NewEncoder(w).Encode(
-		struct {
-			models.Response
-			Data []models.AnimeEx `json:"data"`
-		}{
-			models.Response{},
-			animeTitles,
-		},
-	)
+	// Returning the response
+	utils.ReturnResponse(w, animeTitles, nil)
 }
