@@ -38,6 +38,7 @@ func main() {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 
+	// Invoking the content type middleware
 	apiRouter.Use(middlewares.ContentType)
 
 	apiRouter.HandleFunc("/", hdlr.IndexHandler).Methods("GET")

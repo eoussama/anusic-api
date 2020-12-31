@@ -10,10 +10,10 @@ import (
 // Init initializes the v1 of the API
 func Init(r *mux.Router) {
 
-	// Routing
+	// Subrouting
 	v1Route := r.PathPrefix("/v1").Subrouter()
 
-	// Root
+	// Subroot routing
 	v1Route.HandleFunc("/", hdlr.IndexHandler).Methods("GET")
 	v1Route.HandleFunc("", hdlr.IndexHandler).Methods("GET")
 
