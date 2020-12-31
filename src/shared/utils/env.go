@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/eoussama/anusic-api/src/shared/enums"
@@ -17,5 +18,6 @@ func LoadEnvVars() {
 	err := godotenv.Load(path)
 	if err != nil {
 		Log("Error loading .env file", enums.LogError)
+		os.Exit(1)
 	}
 }
