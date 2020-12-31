@@ -27,5 +27,5 @@ func Logs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Returning the response
-	utils.ReturnResponse(w, r, logIDs, nil)
+	utils.ReturnResponse(w, r, logIDs, nil, http.StatusOK)
 }

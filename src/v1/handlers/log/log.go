@@ -27,7 +27,7 @@ func Log(w http.ResponseWriter, r *http.Request) {
 
 	// Returning the response
 	if err != nil {
-		utils.ReturnResponse(w, r, nil, models.Error.LogNotFound(models.Error{}, id))
+		utils.ReturnResponse(w, r, nil, models.Error.LogNotFound(models.Error{}, id), http.StatusNotFound)
 	} else {
 		logData := []string{}
 
@@ -36,6 +36,6 @@ func Log(w http.ResponseWriter, r *http.Request) {
 			logData = append(logData, scanner.Text())
 		}
 
-		utils.ReturnResponse(w, r, logData, nil)
+		utils.ReturnResponse(w, r, logData, nil, http.StatusOK)
 	}
 }

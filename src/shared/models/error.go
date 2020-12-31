@@ -25,3 +25,12 @@ func (e Error) LogNotFound(id string) *Error {
 		Description: fmt.Sprintf("ID %s does not match any log file", id),
 	}
 }
+
+// InvalidAccessToken returns a proper error message for when
+// the access token is incorrect
+func (e Error) InvalidAccessToken() *Error {
+	return &Error{
+		Name:        "InvalidAccessToken",
+		Description: "Invalid access token",
+	}
+}
