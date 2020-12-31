@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-// Logging dump location
-var logDirectory = "logs"
+// LogDirectory is the name of the Logging dump location
+var LogDirectory = "logs"
 
 // InfoLogger hosts the logger that logs info
 var InfoLogger *log.Logger
@@ -28,9 +28,9 @@ func init() {
 	timestamp := time.Now().Unix()
 	logFile := strconv.Itoa(int(timestamp)) + ".log"
 
-	// Constructing the logs path
+	// Constructing the logs file path
 	absPath, _ := filepath.Abs(".")
-	directoryPath := filepath.Join(absPath, logDirectory)
+	directoryPath := filepath.Join(absPath, LogDirectory)
 	filePath := filepath.Join(directoryPath, logFile)
 
 	// Ensuring the logs directory

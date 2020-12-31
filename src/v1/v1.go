@@ -3,6 +3,7 @@ package v1
 import (
 	hdlr "github.com/eoussama/anusic-api/src/v1/handlers"
 	"github.com/eoussama/anusic-api/src/v1/handlers/anime"
+	"github.com/eoussama/anusic-api/src/v1/handlers/log"
 	"github.com/gorilla/mux"
 )
 
@@ -20,7 +21,11 @@ func Init(r *mux.Router) {
 	v1Route.HandleFunc("/anime", anime.AnimeListHandler).Methods("GET")
 	v1Route.HandleFunc("/anime/", anime.AnimeListHandler).Methods("GET")
 
-	// // Anime by ID
+	// Anime by ID
 	v1Route.HandleFunc("/anime/{id:[0-9]+}", anime.AnimeHandler).Methods("GET")
 	v1Route.HandleFunc("/anime/{id:[0-9]+}/", anime.AnimeHandler).Methods("GET")
+
+	// Logs
+	v1Route.HandleFunc("/logs", log.Logs).Methods("GET")
+	v1Route.HandleFunc("/logs/", log.Logs).Methods("GET")
 }
