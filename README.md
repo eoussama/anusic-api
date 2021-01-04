@@ -4,7 +4,7 @@
 
 API that scraps `https://www.reddit.com/r/AnimeThemes`.
 
-## Examples
+## Routes
 
 *Anime list*: `https://anusic-api.herokuapp.com/api/v1/anime`
 
