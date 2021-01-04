@@ -25,3 +25,7 @@ In order to access the following routes, you need to send an authentication code
 *Logs*: `https://anusic-api.herokuapp.com/api/v1/logs`
 
 *Log content*: `https://anusic-api.herokuapp.com/api/v1/logs/:id`
+
+---
+
+Quick bootstrap with the following Docker image `eoussama/anusic-api:0.0.2`
