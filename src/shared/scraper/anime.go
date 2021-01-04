@@ -122,7 +122,7 @@ func AnimeInfo() {
 
 			count++
 		} else {
-			utils.Log(fmt.Sprintf("Anime “%s” not found year = %s", targetID, year), enums.LogWarning)
+			utils.Log(fmt.Sprintf("Anime “%s” not found", targetID), enums.LogWarning)
 		}
 	})
 
