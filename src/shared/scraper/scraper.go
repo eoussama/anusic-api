@@ -10,7 +10,7 @@ import (
 )
 
 // BASE_ANIME is the endpoint from where the scraper fetches the data
-var BASE_ANIME string = "https://www.reddit.com/r/AnimeThemes/wiki/"
+var BASE_ANIME string = "https://web.archive.org/web/20220808230049/https://www.reddit.com/r/AnimeThemes/wiki/"
 
 // Scrap scraps all data
 func Scrap() {

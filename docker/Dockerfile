@@ -25,6 +25,9 @@ FROM scratch AS bin
 # Copying the binary
 COPY --from=build /go/bin/anusic-api /
 
+# Copying the cache
+COPY --from=build /go/src/github.com/eoussama/anusic-api/data /data
+
 # Copying the deps
 COPY --from=build /go/src/github.com/eoussama/anusic-api/config /config
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
