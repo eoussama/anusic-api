@@ -4,8 +4,6 @@
 
 API that scraps `https://www.reddit.com/r/AnimeThemes`.
 
-Docker image: [0.0.3](https://hub.docker.com/r/eoussama/anusic-api)
-
 ## Routes
 
 *Anime list*: `https://anusic-api.herokuapp.com/api/v1/anime`
